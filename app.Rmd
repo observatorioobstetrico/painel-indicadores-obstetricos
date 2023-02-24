@@ -99,7 +99,7 @@ Conta com **pesquisadores** da <a href = https://www.ufes.br target = _blank> Un
 
 #### Os dados
 
-São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2022, **sendo estes e os de 2021 preliminares**, atualizados em 05 de janeiro de 2023.
+São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2022, **sendo estes e os de 2021 preliminares**, atualizados em 24 de fevereiro de 2023.
 
 <br>
 
