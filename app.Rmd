@@ -99,7 +99,7 @@ Conta com **pesquisadores** da <a href = https://www.ufes.br target = _blank> Un
 
 #### Os dados
 
-São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2022 **(sendo estes e os de 2021 preliminares)**, atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em 29 de abril de 2023.
+São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2022 **(sendo estes preliminares)**, atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em 30 de junho de 2023.
 
 <br>
 
@@ -121,7 +121,7 @@ Inputs {.sidebar data-width=350}
 <br>
 ```{r input-nasc}
 hr(); strong("Nascimentos"); hr()
-p(em(HTML(paste("Obs.: os dados de 2021 e 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEst_sinasc",
   label = "Selecione o nível de análise:",
@@ -343,7 +343,7 @@ Inputs {.sidebar data-width=350}
 <br>
 ```{r input-pp}
 hr(); strong("Partos Prematuros"); hr()
-p(em(HTML(paste("Obs.: os dados de 2021 e 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPP",
   label = "Selecione o nível de análise:",
@@ -681,7 +681,7 @@ Inputs {.sidebar data-width=350}
 <br>
 ```{r input-pc}
 hr(); strong("Partos Cesáreas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2021 e 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPC",
   label = "Selecione o nível de análise:",
@@ -1020,7 +1020,7 @@ Inputs {.sidebar data-width=350}
 <br>
 ```{r input-anc}
 hr(); strong("Anomalias Congênitas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2021 e 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstAN",
   label = "Selecione o nível de análise:",
@@ -1386,7 +1386,7 @@ Inputs {.sidebar data-width=350}
 <br>
 ```{r input-cpn}
 hr(); strong("Consultas de Pré-natal"); hr()
-p(em(HTML(paste("Obs.: os dados de 2021 e 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCPN",
   label = "Selecione o nível de análise:",
@@ -2000,7 +2000,7 @@ Inputs {.sidebar data-width=350}
 <br>
 ```{r input-cr}
 hr(); strong("Classificação de Robson"); hr()
-p(em(HTML(paste("Obs.: os dados de 2021 e 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCRob",
   label = "Selecione o nível de análise:",
@@ -2299,7 +2299,7 @@ Inputs {.sidebar data-width=350}
 <br>
 ```{r input-rc}
 hr(); strong("Robson e Cesáreas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2021 e 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 shiny::selectInput(
   inputId = "SelectMunEstRC",
   label = "Selecione o nível de análise:",
