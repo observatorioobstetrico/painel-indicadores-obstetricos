@@ -19,13 +19,27 @@ runtime: shiny
 ---
 
 <style>
-body {
-  padding-top: 85px;
+.navbar.navbar-inverse {
+  background-color: #0A1E3C !important;
+  border-color: #0A1E3C !important;
 }
-.section.sidebar {
-  top: 50px;
-  background-color: rgb(240, 240, 240);
-  color: #000000
+.navbar-brand {
+    color: #ffffff !important;
+    font-size: 1.3rem;
+    vertical-align: middle;
+}
+body {
+    font-size: 1em;
+    padding: 83px 15px 8px;
+}
+.negrito {
+  font-weight: 700;
+}
+.chart-title {
+    border-bottom: 1px solid #dee2e6;
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 7px 10px 4px;
 }
 </style>
 
@@ -55,17 +69,17 @@ library(shinyjs)
 # SINASC --------------------
 # tratamento
 dados_sinasc2021 <- read.csv("dados_sinasc.csv.gz") %>%
-  clean_names() 
+  clean_names()
 
 dados_premat_cons <- read.csv("prematuridade_consultas_muni.csv.gz") %>%
-  clean_names() 
+  clean_names()
 
-dados_robson <- read.csv("robson_muni.csv.gz") 
+dados_robson <- read.csv("robson_muni.csv.gz")
 
-dados_robson_cesarea <- read.csv("robson_cesar_muni.csv.gz") %>% 
-  clean_names() 
+dados_robson_cesarea <- read.csv("robson_cesar_muni.csv.gz") %>%
+  clean_names()
 
-tabela_aux_municipios <- read.csv("tabela_auxiliar_municipios.csv") 
+tabela_aux_municipios <- read.csv("tabela_auxiliar_municipios.csv")
 
 # ordenar em ordem alfabetica municipios e estados
 estadosChoices <- sort(unique(tabela_aux_municipios$uf))
@@ -82,34 +96,70 @@ dados_robson_cesarea[["grupo_robson_aux"]] <-
 Sobre
 =============================================
 
-#### O Observatório Obstétrico Brasileiro Indicadores Obstétricos (OOBr Indicadores Obstétricos)
-
+<h3><span style = "font-weight: bold;">O OOBr Indicadores Obstétricos</span></h3>
 
 É um painel de visualização dinâmico com análises sob a perspectiva de algumas variáveis da base de dados do Sistema de Informações de Nascidos Vivos (SINASC). As informações consideradas são referentes aos registros de nascidos vivos a partir de 1996.
 
-<br>
-
-#### O Observatório Obstétrico Brasileiro (OOBr)
+<h3><span style = "font-weight: bold;">O Observatório Obstétrico Brasileiro (OOBr)</span></h3>
 
 Tem como objetivo disponibilizar plataformas interativas de monitoramento e análises de dados públicos cientificamente embasadas e disseminar informações de qualidade e relevantes acerca da área da saúde materno-infantil.
 
 Conta com **pesquisadores** da <a href = https://www.ufes.br target = _blank> Universidade Federal do Espírito Santo (UFES) </a> e da <a href = https://www5.usp.br target = _blank> Universidade de São Paulo (USP) </a>. Para maiores informações, veja o <a href = https://observatorioobstetricobr.org/ target = _blank> site do OOBr </a>.
 
-<br>
+<h3><span style = "font-weight: bold;">Os dados</span></h3>
 
-#### Os dados
+São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2022 **(sendo estes preliminares)**, atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em 31 de agosto de 2023. Os dados podem ser acessados em: Herzog, R. S.; Francisco, R. P. V.; Rodrigues, A. S. Indicadores Obstétricos [banco de dados], 2022, Observatório Obstétrico Brasileiro (OOBr). Disponível em DOI: https://doi.org/10.7303/syn35916919.
 
-São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2022 **(sendo estes preliminares)**, atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em 28 de julho de 2023.
+<h3><span style = "font-weight: bold;">Como citar esse painel</span></h3>
 
-<br>
+Observatório Obstétrico Brasileiro. OOBr Indicadores Obstétricos, 2022. Disponível em https://observatorioobstetrico.shinyapps.io/indicadores-obstetricos. DOI: https://doi.org/10.7303/syn52503703.3
 
-#### Contato
+
+<h3><span style = "font-weight: bold;">Contato</span></h3>
 
 Para comentários, sugestões e colaborações científicas, por favor, envie uma mensagem para <a href="mailto:comunicacao@observatorioobstetricobr.org"> comunicacao@observatorioobstetricobr.org</a>. E para acompanhar o trabalho do OOBr de perto, siga-o nas redes acessando os ícones do canto superior direito.
 
-```{r logos, echo = FALSE, fig.align ='center', out.width="100%"}
-knitr::include_graphics("www/print-or-cinza.png")
+<h3><span style = "font-weight: bold;">Realização</span></h3>
+
+<center>
+```{r, out.width="10%", fig.show='hold'}
+knitr::include_graphics(c(
+  "www/logos/realizacao/logo_oobr.png",
+  "www/logos/realizacao/logo_ufes.png",
+  "www/logos/realizacao/logo_medicina_usp.png", 
+  "www/logos/realizacao/logo_daslab.png"
+))
 ```
+</center>
+
+<h3><span style = "font-weight: bold;">Financiadores</span></h3>
+
+<center>
+```{r, teste, out.width="10%", fig.show='hold'}
+knitr::include_graphics(c(
+  "www/logos/financiadores/logo_bill_melinda.png",
+  "www/logos/financiadores/logo_cnpq.png",
+  "www/logos/financiadores/logo_ms1.png", 
+  "www/logos/financiadores/logo_ms2.png", 
+  "www/logos/financiadores/logo_ms3.png", 
+  "www/logos/financiadores/logo_fapes.png",
+  "www/logos/financiadores/logo_fapes2.png"
+))
+```
+</center>
+
+
+<h3><span style = "font-weight: bold;">Apoio</span></h3>
+
+<center>
+```{r, out.width="8%", fig.show='hold'}
+knitr::include_graphics(c(
+  "www/logos/apoio/logo_pcdas.png",
+  "www/logos/apoio/logo_odd.png"
+))
+```
+</center>
+
 
 
 
@@ -124,7 +174,7 @@ hr(); strong("Nascimentos"); hr()
 p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEst_sinasc",
-  label = "Selecione o nível de análise:",
+  label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
   choices = c("Nacional", "Estadual", "Municipal"),
   multiple = FALSE
 )
@@ -132,7 +182,7 @@ shiny::conditionalPanel(
   condition = "input.SelectMunEst_sinasc == 'Estadual'",
   selectInput(
     inputId = "SelectEst_sinasc",
-    label = "Selecione o estado:",
+    label = HTML("<span class = 'negrito'>Selecione o estado:</span>"),
     choices = estadosChoices,
     multiple = FALSE
   )
@@ -142,13 +192,13 @@ conditionalPanel(
     condition = "input.SelectMunEst_sinasc == 'Municipal'",
     selectizeInput(
       inputId = "SelectEstadoMun_sinasc",
-      label = "Estado ao qual pertence o município:",
+      label = HTML("<span class = 'negrito'>Estado ao qual pertence o município:</span>"),
       choices = estadosChoices,
       options = list(placeholder = "Selecione um estado")
     ),
     selectizeInput(
       inputId = "SelectMun_sinasc",
-      label = "Selecione o município:",
+      label = HTML("<span class = 'negrito'>Selecione o município:</span>"),
       choices = NULL,
       options = list(placeholder = "Selecione um município")
     )
@@ -163,7 +213,7 @@ observeEvent(input$SelectEstadoMun_sinasc, {
 
 shiny::sliderInput(
   inputId = "anos_sinasc",
-  label = "Selecione o intervalo de anos:",
+  label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
   min = min(dados_sinasc2021$ano),
   max = max(dados_sinasc2021$ano),
   value = c(min(dados_sinasc2021$ano), max(dados_sinasc2021$ano)),
@@ -196,19 +246,19 @@ DT::renderDT({
         colnames = c("Ano", "N° de nascimentos"),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else if (input$SelectMunEst_sinasc == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -223,19 +273,19 @@ DT::renderDT({
         colnames = c("Ano", "N° de nascimentos"),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -250,17 +300,17 @@ DT::renderDT({
         colnames = c("Ano", "N° de nascimentos"),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
 })
 ```
@@ -288,16 +338,16 @@ shiny::renderPlot({
       ) +
       labs(x = NULL, y = "n° de nascimentos") +
       theme_linedraw()
-    
+
   }
-  
+
   else if (input$SelectMunEst_sinasc == 'Estadual') {
     dados_sinasc2021 %>%
       filter(uf == input$SelectEst_sinasc,
              ano <= input$anos_sinasc[2],
              ano >= input$anos_sinasc[1]) %>%
-      group_by(uf, ano) %>% 
-      summarise(nascidos = sum(nascidos)) %>% 
+      group_by(uf, ano) %>%
+      summarise(nascidos = sum(nascidos)) %>%
       ggplot(aes(x = ano, y = nascidos)) +
       geom_bar(stat = "identity",
                fill = "#37399a",
@@ -309,9 +359,9 @@ shiny::renderPlot({
         breaks = seq(input$anos_sinasc[1], input$anos_sinasc[2], by = 1)
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -330,7 +380,7 @@ shiny::renderPlot({
         breaks = seq(input$anos_sinasc[1], input$anos_sinasc[2], by = 1)
       ) +
       theme_linedraw()
-    
+
   }
 })
 ```
@@ -346,7 +396,7 @@ hr(); strong("Partos Prematuros"); hr()
 p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPP",
-  label = "Selecione o nível de análise:",
+  label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
   choices = c("Nacional", "Estadual", "Municipal"),
   multiple = FALSE
 )
@@ -354,7 +404,7 @@ shiny::conditionalPanel(
   condition = "input.SelectMunEstPP == 'Estadual'",
   selectInput(
     inputId = "SelectEstPP",
-    label = "Selecione o estado:",
+    label = HTML("<span class = 'negrito'>Selecione o estado:</span>"),
     choices = estadosChoices,
     multiple = FALSE
   )
@@ -364,13 +414,13 @@ conditionalPanel(
     condition = "input.SelectMunEstPP == 'Municipal'",
     selectizeInput(
       inputId = "SelectEstadoMunPP",
-      label = "Estado ao qual pertence o município:",
+      label = HTML("<span class = 'negrito'>Estado ao qual pertence o município:</span>"),
       choices = estadosChoices,
       options = list(placeholder = "Selecione um estado")
     ),
     selectizeInput(
       inputId = "SelectMunPP",
-      label = "Selecione o município:",
+      label = HTML("<span class = 'negrito'>Selecione o município:</span>"),
       choices = NULL,
       options = list(placeholder = "Selecione um município")
     )
@@ -385,7 +435,7 @@ observeEvent(input$SelectEstadoMunPP, {
 
 sliderInput(
   inputId = "anosPP",
-  label = "Selecione o intervalo de anos:",
+  label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
   min = min(dados_sinasc2021$ano),
   max = max(dados_sinasc2021$ano),
   value = c(min(dados_sinasc2021$ano), max(dados_sinasc2021$ano)),
@@ -409,7 +459,7 @@ $$
 Row {data-width=650}
 ---------------------------------------------
 
-### Tabela Partos Prematuros 
+### Tabela Partos Prematuros
 
 ```{r table-pp}
 DT::renderDT({
@@ -446,18 +496,18 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
   }
-  
+
   else if (input$SelectMunEstPP == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -491,19 +541,19 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -511,7 +561,7 @@ DT::renderDT({
         uf == input$SelectEstadoMunPP,
         ano <= input$anosPP[2],
         ano >= input$anosPP[1]
-      ) %>% 
+      ) %>%
       rename(
         faltantes_prematuros = faltante_premat,
         partos_prematuros = premat,
@@ -534,11 +584,11 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
@@ -590,9 +640,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else if (input$SelectMunEstPP == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -631,9 +681,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -641,7 +691,7 @@ shiny::renderPlot({
         uf == input$SelectEstadoMunPP,
         ano <= input$anosPP[2],
         ano >= input$anosPP[1]
-      ) %>% 
+      ) %>%
       rename(
         faltantes_prematuros = faltante_premat,
         partos_prematuros = premat,
@@ -684,7 +734,7 @@ hr(); strong("Partos Cesáreas"); hr()
 p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPC",
-  label = "Selecione o nível de análise:",
+  label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
   choices = c("Nacional", "Estadual", "Municipal"),
   multiple = FALSE
 )
@@ -692,7 +742,7 @@ shiny::conditionalPanel(
   condition = "input.SelectMunEstPC == 'Estadual'",
   selectInput(
     inputId = "SelectEstPC",
-    label = "Selecione o estado:",
+    label = HTML("<span class = 'negrito'>Selecione o estado:</span>"),
     choices = estadosChoices,
     multiple = FALSE
   )
@@ -703,13 +753,13 @@ conditionalPanel(
     condition = "input.SelectMunEstPC == 'Municipal'",
     selectizeInput(
       inputId = "SelectEstadoMunPC",
-      label = "Estado ao qual pertence o município:",
+      label = HTML("<span class = 'negrito'>Estado ao qual pertence o município:</span>"),
       choices = estadosChoices,
       options = list(placeholder = "Selecione um estado")
     ),
     selectizeInput(
       inputId = "SelectMunPC",
-      label = "Selecione o município:",
+      label = HTML("<span class = 'negrito'>Selecione o município:</span>"),
       choices = NULL,
       options = list(placeholder = "Selecione um município")
     )
@@ -724,7 +774,7 @@ observeEvent(input$SelectEstadoMunPC, {
 
 sliderInput(
   inputId = "anosPC",
-  label = "Selecione o intervalo de anos:",
+  label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
   min = min(dados_sinasc2021$ano),
   max = max(dados_sinasc2021$ano),
   value = c(min(dados_sinasc2021$ano), max(dados_sinasc2021$ano)),
@@ -737,7 +787,7 @@ sliderInput(
 
 Parto cesárea é identificado se a variável `PARTO = 2 (Cesárea)` na base do `SINASC`.
 
-Não são consideradas na `% cesáreas` os casos sem informação do tipo de parto, ou seja, se `PARTO = 9 (Ignorado)`. 
+Não são consideradas na `% cesáreas` os casos sem informação do tipo de parto, ou seja, se `PARTO = 9 (Ignorado)`.
 
 Algebricamente, a porcentagem de partos cesáreas é dada por:
 
@@ -783,19 +833,19 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else if (input$SelectMunEstPC == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -829,19 +879,19 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -849,7 +899,7 @@ DT::renderDT({
         uf == input$SelectEstadoMunPC,
         ano <= input$anosPC[2],
         ano >= input$anosPC[1]
-      ) %>% 
+      ) %>%
       rename(
         faltantes_cesarea = faltante_tipo_parto,
         partos_cesarea = cesarea,
@@ -872,17 +922,17 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
 })
 ```
@@ -929,9 +979,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else if (input$SelectMunEstPC == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -969,9 +1019,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -1007,7 +1057,7 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
 })
 ```
@@ -1023,7 +1073,7 @@ hr(); strong("Anomalias Congênitas"); hr()
 p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstAN",
-  label = "Selecione o nível de análise:",
+  label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
   choices = c("Nacional", "Estadual", "Municipal"),
   multiple = FALSE
 )
@@ -1031,7 +1081,7 @@ shiny::conditionalPanel(
   condition = "input.SelectMunEstAN == 'Estadual'",
   selectInput(
     inputId = "SelectEstAN",
-    label = "Selecione o estado:",
+    label = HTML("<span class = 'negrito'>Selecione o estado:</span>"),
     choices = estadosChoices,
     multiple = FALSE
   )
@@ -1041,13 +1091,13 @@ conditionalPanel(
     condition = "input.SelectMunEstAN == 'Municipal'",
     selectizeInput(
       inputId = "SelectEstadoMunAN",
-      label = "Estado ao qual pertence o município:",
+      label = HTML("<span class = 'negrito'>Estado ao qual pertence o município:</span>"),
       choices = estadosChoices,
       options = list(placeholder = "Selecione um estado")
     ),
     selectizeInput(
       inputId = "SelectMunAN",
-      label = "Selecione o município:",
+      label = HTML("<span class = 'negrito'>Selecione o município:</span>"),
       choices = NULL,
       options = list(placeholder = "Selecione um município")
     )
@@ -1062,7 +1112,7 @@ observeEvent(input$SelectEstadoMunAN, {
 
 sliderInput(
   inputId = "anosAN",
-  label = "Selecione o intervalo de anos:",
+  label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
   min = min(dados_sinasc2021$ano[!is.na(dados_sinasc2021$porc_anomalia)]),
   max = max(dados_sinasc2021$ano),
   value = c(min(dados_sinasc2021$ano), max(dados_sinasc2021$ano)),
@@ -1073,9 +1123,9 @@ sliderInput(
 
 *****
 
-É importante ressaltar que essa variável do SINASC possui informações somente a partir do ano de 2001. Por esse motivo, não é possível fazer filtros em que são considerados anos anteriores. 
+É importante ressaltar que essa variável do SINASC possui informações somente a partir do ano de 2001. Por esse motivo, não é possível fazer filtros em que são considerados anos anteriores.
 
-Um caso é considerado como anomalia congênita se `def_anomalia = Sim` na base de dados do `SINASC`. E um caso de anomalia congênita considerado como dado faltante é se `def_anomalia = Ignorado`. 
+Um caso é considerado como anomalia congênita se `def_anomalia = Sim` na base de dados do `SINASC`. E um caso de anomalia congênita considerado como dado faltante é se `def_anomalia = Ignorado`.
 
 Algebricamente, a `porcentagem de anomalias` é dada por:
 
@@ -1132,19 +1182,19 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else if (input$SelectMunEstAN == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -1189,19 +1239,19 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -1209,7 +1259,7 @@ DT::renderDT({
         uf == input$SelectEstadoMunAN,
         ano <= input$anosAN[2],
         ano >= input$anosAN[1]
-      ) %>% 
+      ) %>%
       rename(faltantes_anomalias = faltante_anomalia,
              anomalias_cogenitas = anomalia) %>%
       mutate(porcentagem_anomalias = round(porc_anomalia, 2)) %>%
@@ -1230,17 +1280,17 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
 })
 ```
@@ -1248,7 +1298,7 @@ DT::renderDT({
 Row {data-width=650}
 ---------------------------------------------
 
-### Gráfico Anomalias Congênitas 
+### Gráfico Anomalias Congênitas
 
 ```{r graph-anc}
 shiny::renderPlot({
@@ -1291,9 +1341,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else if (input$SelectMunEstAN == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -1335,9 +1385,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -1373,7 +1423,7 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
 })
 ```
@@ -1389,7 +1439,7 @@ hr(); strong("Consultas de Pré-natal"); hr()
 p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCPN",
-  label = "Selecione o nível de análise:",
+  label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
   choices = c("Nacional", "Estadual", "Municipal"),
   multiple = FALSE
 )
@@ -1397,7 +1447,7 @@ shiny::conditionalPanel(
   condition = "input.SelectMunEstCPN == 'Estadual'",
   selectInput(
     inputId = "SelectEstCPN",
-    label = "Selecione o estado:",
+    label = HTML("<span class = 'negrito'>Selecione o estado:</span>"),
     choices = estadosChoices,
     multiple = FALSE
   )
@@ -1407,13 +1457,13 @@ conditionalPanel(
     condition = "input.SelectMunEstCPN == 'Municipal'",
     selectizeInput(
       inputId = "SelectEstadoMunCPN",
-      label = "Estado ao qual pertence o município:",
+      label = HTML("<span class = 'negrito'>Estado ao qual pertence o município:</span>"),
       choices = estadosChoices,
       options = list(placeholder = "Selecione um estado")
     ),
     selectizeInput(
       inputId = "SelectMunCPN",
-      label = "Selecione o município:",
+      label = HTML("<span class = 'negrito'>Selecione o município:</span>"),
       choices = NULL,
       options = list(placeholder = "Selecione um município")
     )
@@ -1429,7 +1479,7 @@ observeEvent(input$SelectEstadoMunCPN, {
 
 sliderInput(
   inputId = "anosCPN",
-  label = "Selecione o intervalo de anos:",
+  label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
   min = min(dados_sinasc2021$ano),
   max = max(dados_sinasc2021$ano),
   value = c(min(dados_sinasc2021$ano), max(dados_sinasc2021$ano)),
@@ -1448,7 +1498,7 @@ $$
 \mbox{% {} consultas} = \frac{\mbox{N° {} consultas}}{\mbox{(N° de nascimentos - N° sem informação)}},
 $$
 
-em que $\{\}$ deve ser substituído pela categoria `nenhuma consulta`, `1 a 6 consultas` ou `7+ consultas`, a depender da análise de interesse.  
+em que $\{\}$ deve ser substituído pela categoria `nenhuma consulta`, `1 a 6 consultas` ou `7+ consultas`, a depender da análise de interesse.
 
 Row {data-width=650}
 ---------------------------------------------
@@ -1510,19 +1560,19 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else if (input$SelectMunEstCPN == 'Estadual') {
     dados_sinasc2021 %>%
       group_by(uf, ano) %>%
@@ -1578,19 +1628,19 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
         )
       )
-    
+
   }
-  
+
   else {
     dados_sinasc2021 %>%
       filter(
@@ -1638,11 +1688,11 @@ DT::renderDT({
         ),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
@@ -1691,9 +1741,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else if (input$SelectMunEstCPN == 'Estadual') {
     dados_premat_cons %>%
       filter(uf == input$SelectEstCPN,
@@ -1728,9 +1778,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else {
     dados_premat_cons %>%
       filter(
@@ -1738,7 +1788,7 @@ shiny::renderPlot({
         uf == input$SelectEstadoMunCPN,
         ano <= input$anosCPN[2],
         ano >= input$anosCPN[1]
-      ) %>% 
+      ) %>%
       mutate(porcentagem_nenhuma_consulta = nenhuma_consulta / (nascidos -
                                                                   faltante_consulta) *
                100) %>%
@@ -1763,7 +1813,7 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
 })
 ```
@@ -1804,9 +1854,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else if (input$SelectMunEstCPN == 'Estadual') {
     dados_premat_cons %>%
       filter(uf == input$SelectEstCPN,
@@ -1841,9 +1891,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else{
     dados_premat_cons %>%
       filter(
@@ -1851,7 +1901,7 @@ shiny::renderPlot({
         uf == input$SelectEstadoMunCPN,
         ano <= input$anosCPN[2],
         ano >= input$anosCPN[1]
-      ) %>% 
+      ) %>%
       mutate(porcentagem_uma_ate_seis_consultas = consulta1 / (nascidos - faltante_consulta) *
                100) %>%
       ggplot(aes(x = ano, y = porcentagem_uma_ate_seis_consultas)) +
@@ -1875,7 +1925,7 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
 })
 ```
@@ -1916,9 +1966,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else if (input$SelectMunEstCPN == 'Estadual') {
     dados_premat_cons %>%
       filter(uf == input$SelectEstCPN,
@@ -1953,9 +2003,9 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
-  
+
   else{
     dados_premat_cons %>%
       filter(
@@ -1963,7 +2013,7 @@ shiny::renderPlot({
         uf == input$SelectEstadoMunCPN,
         ano <= input$anosCPN[2],
         ano >= input$anosCPN[1]
-      ) %>% 
+      ) %>%
       mutate(porcentagem_sete_ou_mais_consultas = consulta4 / (nascidos - faltante_consulta) *
                100) %>%
       ggplot(aes(x = ano, y = porcentagem_sete_ou_mais_consultas)) +
@@ -1987,7 +2037,7 @@ shiny::renderPlot({
         )
       ) +
       theme_linedraw()
-    
+
   }
 })
 ```
@@ -2003,7 +2053,7 @@ hr(); strong("Classificação de Robson"); hr()
 p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCRob",
-  label = "Selecione o nível de análise:",
+  label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
   choices = c("Nacional", "Estadual", "Municipal"),
   multiple = FALSE
 )
@@ -2011,7 +2061,7 @@ shiny::conditionalPanel(
   condition = "input.SelectMunEstCRob == 'Estadual'",
   selectInput(
     inputId = "SelectEstCRob",
-    label = "Selecione o estado:",
+    label = HTML("<span class = 'negrito'>Selecione o estado:</span>"),
     choices = estadosChoices,
     multiple = FALSE
   )
@@ -2021,13 +2071,13 @@ conditionalPanel(
     condition = "input.SelectMunEstCRob == 'Municipal'",
     selectizeInput(
       inputId = "SelectEstadoMunCRob",
-      label = "Estado ao qual pertence o município:",
+      label = HTML("<span class = 'negrito'>Estado ao qual pertence o município:</span>"),
       choices = estadosChoices,
       options = list(placeholder = "Selecione um estado")
     ),
     selectizeInput(
       inputId = "SelectMunCRob",
-      label = "Selecione o município:",
+      label = HTML("<span class = 'negrito'>Selecione o município:</span>"),
       choices = NULL,
       options = list(placeholder = "Selecione um município")
     )
@@ -2042,7 +2092,7 @@ observeEvent(input$SelectEstadoMunCRob, {
 
 numericInput(
   inputId = "anoCRob",
-  label = "Selecione o ano:",
+  label = HTML("<span class = 'negrito'>Selecione o ano:</span>"),
   value = max(dados_robson$ano),
   min = 2014,
   max = max(dados_robson$ano)
@@ -2057,7 +2107,7 @@ A `Classificação de Robson` tem como objetivo identificar quem são as mulhere
 
 Criada em 2001, a `Classificação de Robson` só foi implementada no banco de dados do SINASC do DATASUS em 2010. Ainda assim, em 2013 não há quaisquer informações com relação aos grupos de Robson, e por isso os resultados são zero para esse ano em específico. Somado a isso, existem muitos dados faltantes nos anos de 2010 e 2011, fazendo com que os anos possíveis a serem selecionados sejam a partir de 2014. Por último, a soma do número de casos nas categorias 1 a 10 de Robson em um dado ano de uma determinada região pode não coincidir com o número de nascimentos, pois há dados faltantes para a classificação de Robson, isto é, quando `TPROBSON = 11`.
 
-Algebricamente, a `porcentagem de Robson` é dada por: 
+Algebricamente, a `porcentagem de Robson` é dada por:
 
 $$
 \mbox{% de Robson} = \frac{\mbox{N° de nascimenots no grupo de Robson}}{\mbox{(N° de nascimentos - N° sem informação)}}\times100.
@@ -2081,7 +2131,7 @@ DT::renderDT({
     faltantes_robson <-
       sum(dados_robson[["nascidos"]][dados_robson[["grupo_robson_aux"]] == "faltante" &
                                        dados_robson[["ano"]] == input$anoCRob], na.rm = TRUE)
-    
+
     dados_robson %>%
       filter(ano == input$anoCRob) %>%
       group_by(grupo_robson_aux) %>%
@@ -2097,11 +2147,11 @@ DT::renderDT({
         colnames = c("Grupo de Robson", "N° de nascimentos", "% de Robson"),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
@@ -2113,7 +2163,7 @@ DT::renderDT({
       sum(dados_robson[["nascidos"]][dados_robson[["grupo_robson_aux"]] == "faltante" &
                                        dados_robson[["ano"]] == input$anoCRob &
                                        dados_robson[["uf"]] == input$SelectEstCRob], na.rm = TRUE)
-    
+
     dados_robson %>%
       filter(uf == input$SelectEstCRob, ano == input$anoCRob) %>%
       group_by(grupo_robson_aux) %>%
@@ -2129,11 +2179,11 @@ DT::renderDT({
         colnames = c("Grupo de Robson", "N° de nascimentos", "% de Robson"),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
@@ -2146,7 +2196,7 @@ DT::renderDT({
                                        dados_robson[["ano"]] == input$anoCRob &
                                        dados_robson[["municipio"]] == input$SelectMunCRob &
                                        dados_robson[["uf"]] == input$SelectEstadoMunCRob], na.rm = TRUE)
-    
+
     dados_robson %>%
       filter(municipio == input$SelectMunCRob, uf == input$SelectEstadoMunCRob, ano == input$anoCRob) %>%
       group_by(grupo_robson_aux) %>%
@@ -2162,11 +2212,11 @@ DT::renderDT({
         colnames = c("Grupo de Robson", "N° de nascimentos", "% de Robson"),
         rownames = FALSE,
         extensions = c("Scroller"),
+        fillContainer = TRUE,
         options = list(
           searching = FALSE,
-          scrollX = "180px",
-          scrollY = "290px",
-          scroller = TRUE,
+          paging = FALSE,
+          info = FALSE,
           columnDefs = list(list(
             className = "dt-center", targets = "_all"
           ))
@@ -2187,7 +2237,7 @@ renderPlot({
     faltantes_robson <-
       sum(dados_robson[["nascidos"]][dados_robson[["grupo_robson_aux"]] == "faltante" &
                                        dados_robson[["ano"]] == input$anoCRob], na.rm = TRUE)
-    
+
     dados_robson %>%
       filter(ano == input$anoCRob) %>%
       group_by(grupo_robson_aux) %>%
@@ -2198,7 +2248,7 @@ renderPlot({
         round(nascidos / (sum(nascidos) - faltantes_robson) * 100, 2)
       )) %>%
       ungroup() %>%
-      filter(grupo_robson_aux != "faltante") %>% 
+      filter(grupo_robson_aux != "faltante") %>%
       ggplot(aes(grupo_robson_aux, porcentagem_robson)) +
       geom_bar(stat = "identity",
                color = "black",
@@ -2222,7 +2272,7 @@ renderPlot({
       sum(dados_robson[["nascidos"]][dados_robson[["grupo_robson_aux"]] == "faltante" &
                                        dados_robson[["ano"]] == input$anoCRob &
                                        dados_robson[["uf"]] == input$SelectEstCRob], na.rm = TRUE)
-    
+
     dados_robson %>%
       filter(uf == input$SelectEstCRob, ano == input$anoCRob) %>%
       group_by(grupo_robson_aux) %>%
@@ -2233,7 +2283,7 @@ renderPlot({
         round(nascidos / (sum(nascidos) - faltantes_robson) * 100, 2)
       )) %>%
       ungroup() %>%
-      filter(grupo_robson_aux != "faltante") %>% 
+      filter(grupo_robson_aux != "faltante") %>%
       ggplot(aes(grupo_robson_aux, porcentagem_robson)) +
       geom_bar(stat = "identity",
                color = "black",
@@ -2258,7 +2308,7 @@ renderPlot({
                                        dados_robson[["ano"]] == input$anoCRob &
                                        dados_robson[["municipio"]] == input$SelectMunCRob &
                                        dados_robson[["uf"]] == input$SelectEstadoMunCRob], na.rm = TRUE)
-    
+
     dados_robson %>%
       filter(municipio == input$SelectMunCRob, uf == input$SelectEstadoMunCRob, ano == input$anoCRob) %>%
       group_by(grupo_robson_aux) %>%
@@ -2269,7 +2319,7 @@ renderPlot({
         round(nascidos / (sum(nascidos) - faltantes_robson) * 100, 2)
       )) %>%
       ungroup() %>%
-      filter(grupo_robson_aux != "faltante") %>% 
+      filter(grupo_robson_aux != "faltante") %>%
       ggplot(aes(grupo_robson_aux, porcentagem_robson)) +
       geom_bar(stat = "identity",
                color = "black",
@@ -2302,7 +2352,7 @@ hr(); strong("Robson e Cesáreas"); hr()
 p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
 shiny::selectInput(
   inputId = "SelectMunEstRC",
-  label = "Selecione o nível de análise:",
+  label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
   choices = c("Nacional", "Estadual", "Municipal"),
   multiple = FALSE
 )
@@ -2310,7 +2360,7 @@ shiny::conditionalPanel(
   condition = "input.SelectMunEstRC == 'Estadual'",
   selectInput(
     inputId = "SelectEstRC",
-    label = "Selecione o estado:",
+    label = HTML("<span class = 'negrito'>Selecione o estado:</span>"),
     choices = estadosChoices,
     multiple = FALSE
   )
@@ -2320,13 +2370,13 @@ conditionalPanel(
     condition = "input.SelectMunEstRC == 'Municipal'",
     selectizeInput(
       inputId = "SelectEstadoMunRC",
-      label = "Estado ao qual pertence o município:",
+      label = HTML("<span class = 'negrito'>Estado ao qual pertence o município:</span>"),
       choices = estadosChoices,
       options = list(placeholder = "Selecione um estado")
     ),
     selectizeInput(
       inputId = "SelectMunRC",
-      label = "Selecione o município:",
+      label = HTML("<span class = 'negrito'>Selecione o município:</span>"),
       choices = NULL,
       options = list(placeholder = "Selecione um município")
     )
@@ -2341,7 +2391,7 @@ observeEvent(input$SelectEstadoMunRC, {
 
 shiny::selectInput(
   inputId = "SelectGRob",
-  label = "Selecione o grupo de Robson:",
+  label = HTML("<span class = 'negrito'>Selecione o grupo de Robson:</span>"),
   choices = c("Todos", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
   selected = "Todos",
   multiple = FALSE
@@ -2350,7 +2400,7 @@ shiny::conditionalPanel(
   condition = "input.SelectGRob == 'Todos'",
   numericInput(
     inputId = "fixedAnoRC",
-    label = "Selecione o ano:",
+    label = HTML("<span class = 'negrito'>Selecione o ano:</span>"),
     value = max(dados_robson_cesarea$ano),
     min = min(dados_robson_cesarea$ano[dados_robson_cesarea$ano >= 2014]),
     max = max(dados_robson_cesarea$ano)
@@ -2360,7 +2410,7 @@ shiny::conditionalPanel(
   condition = "input.SelectGRob != 'Todos'",
   sliderInput(
     inputId = "anosRC",
-    label = "Selecione o intervalo de anos:",
+    label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
     min = min(dados_robson_cesarea$ano[dados_robson_cesarea$ano >= 2014]),
     max = max(dados_robson_cesarea$ano),
     value = c(min(dados_robson_cesarea$ano[dados_robson_cesarea$ano >= 2014]), max(dados_robson_cesarea$ano)),
@@ -2389,13 +2439,13 @@ Row {data-width=650}
 DT::renderDT({
   if (input$SelectMunEstRC == 'Nacional') {
     if (input$SelectGRob == 'Todos') {
-      
+
       rob <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC) %>%
         group_by(grupo_robson_aux) %>%
         summarise(nascidos = sum(nascidos)) %>%
-        ungroup() 
-      
+        ungroup()
+
       ces <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC) %>%
         group_by(grupo_robson_aux, tipo_parto) %>%
@@ -2406,13 +2456,13 @@ DT::renderDT({
           values_from = nascidos,
           values_fill = 0
         )
-      
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"vaginal")
       }
-      
+
       rob_ces <- left_join(rob, ces, by = "grupo_robson_aux")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2421,7 +2471,7 @@ DT::renderDT({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       rob_ces %>%
         DT::datatable(
           .,
@@ -2434,20 +2484,20 @@ DT::renderDT({
           ),
           rownames = FALSE,
           extensions = c("Scroller"),
+          fillContainer = TRUE,
           options = list(
             searching = FALSE,
-            scrollX = "180px",
-            scrollY = "290px",
-            scroller = TRUE,
+            paging = FALSE,
+            info = FALSE,
             columnDefs = list(list(
               className = "dt-center", targets = "_all"
             ))
           )
         )
     }
-    
+
     else{
-      
+
       rob <- dados_robson_cesarea %>%
         filter(grupo_robson == input$SelectGRob &
                  (ano >= input$anosRC[1] &
@@ -2455,7 +2505,7 @@ DT::renderDT({
         group_by(ano) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(grupo_robson == input$SelectGRob &
                  (ano >= input$anosRC[1] &
@@ -2467,14 +2517,14 @@ DT::renderDT({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"vaginal")
-      }        
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "ano")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2483,7 +2533,7 @@ DT::renderDT({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       rob_ces %>%
         DT::datatable(
           .,
@@ -2496,11 +2546,11 @@ DT::renderDT({
           ),
           rownames = FALSE,
           extensions = c("Scroller"),
+          fillContainer = TRUE,
           options = list(
             searching = FALSE,
-            scrollX = "180px",
-            scrollY = "290px",
-            scroller = TRUE,
+            paging = FALSE,
+            info = FALSE,
             columnDefs = list(list(
               className = "dt-center", targets = "_all"
             ))
@@ -2509,13 +2559,13 @@ DT::renderDT({
     }
   } else if (input$SelectMunEstRC == 'Estadual') {
     if (input$SelectGRob == 'Todos') {
-      
+
       rob <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC, uf == input$SelectEstRC) %>%
         group_by(grupo_robson_aux) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC, uf == input$SelectEstRC) %>%
         group_by(grupo_robson_aux, uf, tipo_parto) %>%
@@ -2526,15 +2576,15 @@ DT::renderDT({
           values_from = nascidos,
           values_fill = 0
         )
-      
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"uf", -"vaginal")
       } else {
         ces <- select(ces, -"uf")
-      }   
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "grupo_robson_aux")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2543,7 +2593,7 @@ DT::renderDT({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       rob_ces %>%
         DT::datatable(
           .,
@@ -2556,20 +2606,20 @@ DT::renderDT({
           ),
           rownames = FALSE,
           extensions = c("Scroller"),
+          fillContainer = TRUE,
           options = list(
             searching = FALSE,
-            scrollX = "180px",
-            scrollY = "290px",
-            scroller = TRUE,
+            paging = FALSE,
+            info = FALSE,
             columnDefs = list(list(
               className = "dt-center", targets = "_all"
             ))
           )
         )
     }
-    
+
     else{
-      
+
       rob <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -2580,7 +2630,7 @@ DT::renderDT({
         group_by(ano) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -2595,16 +2645,16 @@ DT::renderDT({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"uf", -"vaginal")
       } else {
         ces <- select(ces, -"uf")
-      }           
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "ano")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2613,7 +2663,7 @@ DT::renderDT({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       rob_ces %>%
         DT::datatable(
           .,
@@ -2626,11 +2676,11 @@ DT::renderDT({
           ),
           rownames = FALSE,
           extensions = c("Scroller"),
+          fillContainer = TRUE,
           options = list(
             searching = FALSE,
-            scrollX = "180px",
-            scrollY = "290px",
-            scroller = TRUE,
+            paging = FALSE,
+            info = FALSE,
             columnDefs = list(list(
               className = "dt-center", targets = "_all"
             ))
@@ -2640,19 +2690,19 @@ DT::renderDT({
   } else {
     tryCatch({
           if (input$SelectGRob == 'Todos') {
-      
+
       rob <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC,
                uf == input$SelectEstadoMunRC,
-               municipio == input$SelectMunRC) %>% 
-        group_by(grupo_robson_aux) %>% 
+               municipio == input$SelectMunRC) %>%
+        group_by(grupo_robson_aux) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC,
                uf == input$SelectEstadoMunRC,
-               municipio == input$SelectMunRC) %>% 
+               municipio == input$SelectMunRC) %>%
         group_by(grupo_robson_aux, municipio, tipo_parto) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup() %>%
@@ -2660,16 +2710,16 @@ DT::renderDT({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"municipio", -"vaginal")
       } else {
         ces <- select(ces, -"municipio")
-      }           
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "grupo_robson_aux")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2678,9 +2728,9 @@ DT::renderDT({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       rob_ces %>%
-        DT::datatable(      
+        DT::datatable(
           .,
           colnames = c(
             "Grupo de Robson",
@@ -2691,20 +2741,20 @@ DT::renderDT({
           ),
           rownames = FALSE,
           extensions = c("Scroller"),
+          fillContainer = TRUE,
           options = list(
             searching = FALSE,
-            scrollX = "180px",
-            scrollY = "290px",
-            scroller = TRUE,
+            paging = FALSE,
+            info = FALSE,
             columnDefs = list(list(
               className = "dt-center", targets = "_all"
             ))
           )
         )
     }
-    
+
     else{
-      
+
       rob <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -2716,7 +2766,7 @@ DT::renderDT({
         group_by(ano) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -2732,16 +2782,16 @@ DT::renderDT({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"municipio", -"vaginal")
       } else {
         ces <- select(ces, -"municipio")
-      }      
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "ano")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2750,7 +2800,7 @@ DT::renderDT({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       rob_ces %>%
         DT::datatable(
           .,
@@ -2763,11 +2813,11 @@ DT::renderDT({
           ),
           rownames = FALSE,
           extensions = c("Scroller"),
+          fillContainer = TRUE,
           options = list(
             searching = FALSE,
-            scrollX = "180px",
-            scrollY = "290px",
-            scroller = TRUE,
+            paging = FALSE,
+            info = FALSE,
             columnDefs = list(list(
               className = "dt-center", targets = "_all"
             ))
@@ -2790,13 +2840,13 @@ Row {data-width=650}
 renderPlot({
   if (input$SelectMunEstRC == 'Nacional') {
     if (input$SelectGRob == 'Todos') {
-      
+
       rob <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC) %>%
         group_by(grupo_robson_aux) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC) %>%
         group_by(grupo_robson_aux, tipo_parto) %>%
@@ -2806,14 +2856,14 @@ renderPlot({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"vaginal")
-      }    
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "grupo_robson_aux")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2822,7 +2872,7 @@ renderPlot({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       ggplot(rob_ces[rob_ces[["grupo_robson_aux"]] != "faltante",], aes(grupo_robson_aux, porcentagem_cesareas)) +
         geom_bar(stat = "identity",
                  color = "black",
@@ -2840,11 +2890,11 @@ renderPlot({
           )
         ) +
         theme_linedraw()
-      
+
     }
-    
+
     else{
-      
+
       rob <- dados_robson_cesarea %>%
         filter(
           grupo_robson_aux == input$SelectGRob &
@@ -2854,7 +2904,7 @@ renderPlot({
         group_by(ano) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob &
@@ -2868,14 +2918,14 @@ renderPlot({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"vaginal")
       }
-      
+
       rob_ces <- left_join(rob, ces, by = "ano")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2884,7 +2934,7 @@ renderPlot({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       ggplot(rob_ces, aes(as.factor(ano), porcentagem_cesareas)) +
         geom_bar(stat = "identity",
                  color = "black",
@@ -2902,20 +2952,20 @@ renderPlot({
           )
         ) +
         theme_linedraw()
-      
+
     }
-    
+
   }
-  
+
   else if (input$SelectMunEstRC == 'Estadual') {
     if (input$SelectGRob == 'Todos') {
-      
+
       rob <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC, uf == input$SelectEstRC) %>%
         group_by(grupo_robson_aux) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC, uf == input$SelectEstRC) %>%
         group_by(grupo_robson_aux, uf, tipo_parto) %>%
@@ -2925,16 +2975,16 @@ renderPlot({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"uf", -"vaginal")
       } else {
         ces <- select(ces, -"uf")
-      }   
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "grupo_robson_aux")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -2943,7 +2993,7 @@ renderPlot({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       ggplot(rob_ces[rob_ces[["grupo_robson_aux"]] != "faltante",], aes(grupo_robson_aux, porcentagem_cesareas)) +
         geom_bar(stat = "identity",
                  color = "black",
@@ -2961,11 +3011,11 @@ renderPlot({
           )
         ) +
         theme_linedraw()
-      
+
     }
-    
+
     else{
-      
+
       rob <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -2976,7 +3026,7 @@ renderPlot({
         group_by(ano) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -2992,15 +3042,15 @@ renderPlot({
           values_from = nascidos,
           values_fill = 0
         )
-      
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"uf", -"vaginal")
       } else {
         ces <- select(ces, -"uf")
-      }         
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "ano")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -3009,7 +3059,7 @@ renderPlot({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       ggplot(rob_ces, aes(as.factor(ano), porcentagem_cesareas)) +
         geom_bar(stat = "identity",
                  color = "black",
@@ -3029,23 +3079,23 @@ renderPlot({
         theme_linedraw()
     }
   }
-  
+
   else {
     tryCatch({
           if (input$SelectGRob == 'Todos') {
-      
+
       rob <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC,
                municipio == input$SelectMunRC,
-               uf == input$SelectEstadoMunRC) %>% 
+               uf == input$SelectEstadoMunRC) %>%
         group_by(grupo_robson_aux) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(ano == input$fixedAnoRC,
                municipio == input$SelectMunRC,
-               uf == input$SelectEstadoMunRC) %>% 
+               uf == input$SelectEstadoMunRC) %>%
         group_by(grupo_robson_aux, municipio, tipo_parto) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup() %>%
@@ -3054,15 +3104,15 @@ renderPlot({
           values_from = nascidos,
           values_fill = 0
         )
-      
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"municipio", -"vaginal")
       } else {
         ces <- select(ces, -"municipio")
-      }   
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "grupo_robson_aux")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -3071,7 +3121,7 @@ renderPlot({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       ggplot(rob_ces[rob_ces[["grupo_robson_aux"]] != "faltante",], aes(grupo_robson_aux, porcentagem_cesareas)) +
         geom_bar(stat = "identity",
                  color = "black",
@@ -3089,11 +3139,11 @@ renderPlot({
           )
         ) +
         theme_linedraw()
-      
+
     }
-    
+
     else{
-      
+
       rob <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -3101,11 +3151,11 @@ renderPlot({
           uf == input$SelectEstadoMunRC,
           (ano >= input$anosRC[1] &
              ano <= input$anosRC[2])
-        ) %>% 
+        ) %>%
         group_by(ano) %>%
         summarise(nascidos = sum(nascidos)) %>%
         ungroup()
-      
+
       ces <- dados_robson_cesarea %>%
         filter(
           grupo_robson == input$SelectGRob,
@@ -3121,16 +3171,16 @@ renderPlot({
           names_from = tipo_parto,
           values_from = nascidos,
           values_fill = 0
-        ) 
-      
+        )
+
       if ("vaginal" %in% names(ces)) {
         ces <- select(ces, -"municipio", -"vaginal")
       } else {
         ces <- select(ces, -"municipio")
-      }   
-      
+      }
+
       rob_ces <- left_join(rob, ces, by = "ano")
-      
+
       if ("faltante" %in% names(rob_ces)) {
         rob_ces <- rob_ces %>%
           mutate(porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
@@ -3139,7 +3189,7 @@ renderPlot({
           mutate(faltante = 0,
                  porcentagem_cesareas = round(cesarea / (nascidos - faltante) * 100, 2))
       }
-      
+
       ggplot(rob_ces, aes(as.factor(ano), porcentagem_cesareas)) +
         geom_bar(stat = "identity",
                  color = "black",
