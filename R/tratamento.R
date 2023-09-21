@@ -68,7 +68,7 @@ write_xlsx(dados2, "./databases/cesarea_muni_wide.xlsx")
     mutate(
       apgar1_menor_7 = soma_var(c("00", "01", "02", "03", "04", "05", "06", "0", "1", "2", "4", "5", "6"),dados1),
       apgar1_maior_7 = soma_var(c("07", "08", "09", "7", "8", "9", "10"), dados1),
-      faltantes_apgar1 = soma_var(c("99", "<NA>", "-", "--", "-0", ".", "..", "+", "0Q", "30", "52", "61", "89", "\0209", "è"), dados1),
+      faltantes_apgar1 = soma_var(c("99", "<NA>", "-", "--", "-0", ".", "..", "+", "0Q", "30", "52", "61", "89", "\0209", "<U+00E8>"), dados1),
       porc_apgar1_menor_7 = (apgar1_menor_7 / (apgar1_menor_7 + apgar1_maior_7))*100) %>%
     select(-"<NA>", -"0Q") %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
@@ -86,7 +86,7 @@ write_xlsx(dados2, "./databases/apgar1_muni_wide.xlsx")
     mutate(
       apgar5_menor_7 = soma_var(c("00","01","02","03","04","05","06", "0", "2", "3", "4", "5", "6"),dados1), 
       apgar5_maior_7 = soma_var(c("07","08","09","10", "7", "8", "9"),dados1),
-      faltantes_apgar5 = soma_var(c("99", "<NA>", "\027", "-", "--", ".", "..", "+", "0-", "0+", "11", "\u0081z", "0R"), dados1),
+      faltantes_apgar5 = soma_var(c("99", "<NA>", "\027", "-", "--", ".", "..", "+", "0-", "0+", "11", "<U+0081>z", "0R"), dados1),
       porc_apgar5_menor_7 = (apgar5_menor_7/(apgar5_menor_7+apgar5_maior_7))*100) %>% 
     select(-"<NA>", -"\u0081z", -"0R") %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")]) 
@@ -483,14 +483,4 @@ dados_robson_cesarea <- left_join(
 
 crunch::write.csv.gz(dados_robson_cesarea, file = "robson_cesar_muni.csv.gz")
 
-# ordenar em ordem alfabetica municipios e estados
 
-municipiosChoices <-
-  unique(dados_sinasc2021$muni_estado)[order(unique(dados_sinasc2021$muni_estado))]
-
-saveRDS(municipiosChoices, "municipiosChoices.rds")
-
-estadosChoices <-
-  unique(dados_sinasc2021$uf)[order(unique(dados_sinasc2021$uf))]
-
-saveRDS(estadosChoices, "estadosChoices.rds")

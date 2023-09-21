@@ -1,8 +1,10 @@
 library(dplyr)
+library(sqldf)
 library(httr)
 library(ggplot2)
 library(getPass)
 library(repr)
+library(data.table)
 
 token = getPass()  #Token de acesso à API da PCDaS
 
@@ -36,7 +38,7 @@ for (estado in estados){
         "token": "',token,'"
       },
       "sql": {
-        "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000}
+        "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000}
       }
     }')
   
@@ -54,7 +56,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -75,7 +77,7 @@ head(dataframe)
 dim(dataframe)
 
 # Exportando os dados (Nascimentos_muni = UF, Município, Ano e Nascimentos)
-write.table(dataframe, './databases/Nascimentos_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Nascimentos_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##prematuros
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
@@ -89,7 +91,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000}
           }
           
         }')
@@ -108,7 +110,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -127,8 +129,8 @@ for (estado in estados){
 
 head(dataframe)
 
-# Exportando os dados (Nascimentos_muni = UF, Munic?pio, Ano e Nascimentos)
-write.table(dataframe, './databases/Prematuridade_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+# Exportando os dados (Nascimentos_muni = UF, Município, Ano e Nascimentos)
+write.table(dataframe, 'R/databases/Prematuridade_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##tipo de gestacao
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
@@ -142,7 +144,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ", "fetch_size": 65000}
           }
           
         }')
@@ -161,7 +163,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -178,10 +180,8 @@ for (estado in estados){
   }
 }
 
-head(dataframe)
-
 # Exportando os dados 
-write.table(dataframe, './databases/Tipo_gravidez_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Tipo_gravidez_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##tipo de parto
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
@@ -195,7 +195,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO", "fetch_size": 65000}
           }
           
         }')
@@ -214,7 +214,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -234,7 +234,7 @@ for (estado in estados){
 head(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Tipo_parto_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Tipo_parto_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##numero de consultas
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
@@ -248,7 +248,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS", "fetch_size": 65000}
           }
           
         }')
@@ -267,7 +267,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -287,7 +287,7 @@ for (estado in estados){
 head(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Consultas_PreNatal_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Consultas_PreNatal_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##sexo fetal
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
@@ -301,7 +301,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO", "fetch_size": 65000}
           }
           
         }')
@@ -320,7 +320,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -339,9 +339,8 @@ for (estado in estados){
 
 head(dataframe)
 
-
 # Exportando os dados 
-write.table(dataframe, './databases/Sexo_fetal_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Sexo_fetal_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##Apgar1
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
@@ -355,7 +354,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1", "fetch_size": 65000}
           }
           
         }')
@@ -374,7 +373,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -395,11 +394,11 @@ head(dataframe)
 dim(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Apgar1_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Apgar1_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##Apgar5
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -409,7 +408,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5", "fetch_size": 65000}
           }
           
         }')
@@ -428,7 +427,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -449,11 +448,11 @@ head(dataframe)
 dim(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Apgar5_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Apgar5_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##Anomalia
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -463,7 +462,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL", "fetch_size": 65000}
           }
           
         }')
@@ -482,7 +481,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -503,11 +502,11 @@ head(dataframe)
 dim(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Anomalias_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Anomalias_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##peso fetal menor 2500
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -517,7 +516,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' AND (PESO < 2500) GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' AND (PESO < 2500) GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000}
           }
           
         }')
@@ -536,7 +535,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc,  COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' AND (PESO < 2500) GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc,  COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' AND (PESO < 2500) GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -557,11 +556,11 @@ head(dataframe)
 dim(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Peso_menor_2500_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Peso_menor_2500_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##RACACORMAE
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -571,7 +570,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE", "fetch_size": 65000}
           }
           
         }')
@@ -590,7 +589,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -610,13 +609,12 @@ for (estado in estados){
 head(dataframe)
 dim(dataframe)
 
-
 # Exportando os dados 
-write.table(dataframe, './databases/Raca_mae_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Raca_mae_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##Robson
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -626,7 +624,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON", "fetch_size": 65000}
           }
           
         }')
@@ -645,7 +643,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -666,11 +664,11 @@ head(dataframe)
 dim(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Robson_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Robson_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##parto_prematuro
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -680,7 +678,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000}
           }
           
         }')
@@ -699,7 +697,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -720,8 +718,10 @@ head(dataframe)
 dim(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Prematuro_PCDAS_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Prematuro_PCDAS_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
+
+## partos induzidos por município 
 ## cesárea eletiva (antes do trabalho de parto): 1 (sim)
 params = paste0('{
         "token": {
@@ -729,7 +729,7 @@ params = paste0('{
         },
         "sql": {
           "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STCESPARTO, COUNT(1)',
-                ' FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\"', 
+                ' FROM \\"datasus-sinasc\\"', 
                 ' WHERE TPROBSON in (2, 4)',
                 ' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STCESPARTO" }
         }
@@ -743,7 +743,7 @@ names(df_ces1) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Robson', 'cesarea_antes
 head(df_ces1)
 
 # Exportando os dados
-write.table(df_ces1, './databases/Cesaria_antes_do_parto_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(df_ces1, 'R/databases/Cesaria_antes_do_parto_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ## partos induzidos por município 
 params = paste0('{
@@ -752,7 +752,7 @@ params = paste0('{
         },
         "sql": {
           "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STTRABPART, COUNT(1)',
-                ' FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\"',
+                ' FROM \\"datasus-sinasc\\"',
                 ' WHERE TPROBSON in (2, 4)',
                 ' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STTRABPART" }
         }
@@ -766,11 +766,11 @@ names(df_trab1) <- c('UF','Municipio', 'Codigo', 'Ano', 'Robson', 'parto_induzid
 head(df_trab1)
 
 # Exportando os dados
-write.table(df_trab1, './databases/Parto_induzido_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(df_trab1, 'R/databases/Parto_induzido_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ##prematuridade consultas
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -780,7 +780,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS", "fetch_size": 65000}
           }
           
         }')
@@ -799,7 +799,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -819,11 +819,11 @@ for (estado in estados){
 head(dataframe)
 
 # Exportando os dados 
-write.table(dataframe, './databases/Prematuridade_consultas_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Prematuridade_consultas_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
 ## prematuros, cesareas e robson
 estados <- c('RO','AC','AM','RR','PA','AP','TO','MA','PI','CE','RN','PB','PE','AL','SE','BA','MG','ES','RJ','SP','PR','SC','RS','MS','MT','GO','DF')
-dataframe <- data.frame()
+dataframe <- dataframe2 <- data.frame()
 
 endpoint <- paste0(url_base,"/","sql_query")
 
@@ -833,7 +833,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO", "fetch_size": 65000}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO", "fetch_size": 65000}
           }
           
         }')
@@ -852,7 +852,7 @@ for (estado in estados){
             "token": "',token,'"
           },
           "sql": {
-            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO, COUNT(1) FROM \\"datasus-sinasc_final_1996-2020_preliminar_2021_2022\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO", "fetch_size": 65000, "cursor": "',cursor,'"}
+            "sql": {"query":"SELECT res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO, COUNT(1) FROM \\"datasus-sinasc\\" WHERE res_SIGLA_UF = \'',estado,'\' GROUP BY res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO", "fetch_size": 65000, "cursor": "',cursor,'"}
           }
         }')
     
@@ -872,5 +872,5 @@ for (estado in estados){
 head(dataframe)
 
 # Exportando os dados (Nascimentos_muni = UF, Município, Ano e Nascimentos)
-write.table(dataframe, './databases/Robson_cesar_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+write.table(dataframe, 'R/databases/Robson_cesar_muni2021.csv', sep = ";", dec = ".", row.names = FALSE)
 
