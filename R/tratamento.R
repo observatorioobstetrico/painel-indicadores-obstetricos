@@ -16,13 +16,13 @@ soma_var <- function(vars,dados) {
 tabela_aux_municipios <- data.table::fread("tabela_auxiliar_municipios.csv") 
 
 ## Nascimentos ----
-(dados_nasc <- read_delim("./databases/Nascimentos_muni2022.csv", ";", 
+(dados_nasc <- read_delim("R/databases/Nascimentos_muni2022.csv", ";", 
                           escape_double = FALSE, trim_ws = TRUE))
 
-write_xlsx(dados_nasc, "./databases/Nascimentos_muni_wide.xlsx")
+write_xlsx(dados_nasc, "R/databases/Nascimentos_muni_wide.xlsx")
 
 ## Prematuridade ----
-(dados <- read_delim("./databases/Prematuridade_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Prematuridade_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -37,10 +37,10 @@ write_xlsx(dados_nasc, "./databases/Nascimentos_muni_wide.xlsx")
       porc_premat = (premat/(total_nascidos-faltante_premat))*100) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
-write_xlsx(dados2, "./databases/prematuridade_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/prematuridade_muni_wide.xlsx")
 
 ## Tipo de parto ----
-(dados <- read_delim("./databases/Tipo_parto_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Tipo_parto_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -55,10 +55,10 @@ write_xlsx(dados2, "./databases/prematuridade_muni_wide.xlsx")
       porc_cesarea = (cesarea/(total_nascidos-faltante_tipo_parto))*100) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
-write_xlsx(dados2, "./databases/cesarea_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/cesarea_muni_wide.xlsx")
 
 ## Apgar1 ----
-(dados <- read_delim("./databases/Apgar1_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Apgar1_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -68,15 +68,15 @@ write_xlsx(dados2, "./databases/cesarea_muni_wide.xlsx")
     mutate(
       apgar1_menor_7 = soma_var(c("00", "01", "02", "03", "04", "05", "06", "0", "1", "2", "4", "5", "6"),dados1),
       apgar1_maior_7 = soma_var(c("07", "08", "09", "7", "8", "9", "10"), dados1),
-      faltantes_apgar1 = soma_var(c("99", "<NA>", "-", "--", "-0", ".", "..", "+", "0Q", "30", "52", "61", "89", "\0209", "<U+00E8>"), dados1),
+      faltantes_apgar1 = soma_var(c("99", "<NA>", "-", "--", "-0", ".", "..", "+", "0Q", "30", "52", "61", "89", "\0209", "è"), dados1),
       porc_apgar1_menor_7 = (apgar1_menor_7 / (apgar1_menor_7 + apgar1_maior_7))*100) %>%
     select(-"<NA>", -"0Q") %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
-write_xlsx(dados2, "./databases/apgar1_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/apgar1_muni_wide.xlsx")
 
 ## Apgar5 ----
-(dados <- read_delim("./databases/Apgar5_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Apgar5_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -86,15 +86,15 @@ write_xlsx(dados2, "./databases/apgar1_muni_wide.xlsx")
     mutate(
       apgar5_menor_7 = soma_var(c("00","01","02","03","04","05","06", "0", "2", "3", "4", "5", "6"),dados1), 
       apgar5_maior_7 = soma_var(c("07","08","09","10", "7", "8", "9"),dados1),
-      faltantes_apgar5 = soma_var(c("99", "<NA>", "\027", "-", "--", ".", "..", "+", "0-", "0+", "11", "<U+0081>z", "0R"), dados1),
+      faltantes_apgar5 = soma_var(c("99", "<NA>", "\027", "-", "--", ".", "..", "+", "0-", "0+", "11", "\u0081z", "0R"), dados1),
       porc_apgar5_menor_7 = (apgar5_menor_7/(apgar5_menor_7+apgar5_maior_7))*100) %>% 
     select(-"<NA>", -"\u0081z", -"0R") %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")]) 
 
-write_xlsx(dados2, "./databases/apgar5_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/apgar5_muni_wide.xlsx")
 
 ## Anomalias ----
-(dados <- read_delim("./databases/Anomalias_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Anomalias_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -114,10 +114,10 @@ write_xlsx(dados2, "./databases/apgar5_muni_wide.xlsx")
 (dados2 <- dados2 %>% 
    mutate(porc_anomalia = ifelse(Ano < 2001, NA, porc_anomalia)))
 
-write_xlsx(dados2, "./databases/anomalia_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/anomalia_muni_wide.xlsx")
 
 ## Peso menor 2500 ----
-(dados <- read_delim("./databases/Peso_menor_2500_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Peso_menor_2500_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados <- dados %>% 
@@ -131,10 +131,10 @@ write_xlsx(dados2, "./databases/anomalia_muni_wide.xlsx")
     ) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
-write_xlsx(dados2, "./databases/peso_menor_2500_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/peso_menor_2500_muni_wide.xlsx")
 
 ## Sexo ----
-(dados <- read_delim("./databases/Sexo_fetal_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Sexo_fetal_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -149,10 +149,10 @@ write_xlsx(dados2, "./databases/peso_menor_2500_muni_wide.xlsx")
       porc_fem = (fem/(total_nascidos-faltante_sexo))*100) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
-write_xlsx(dados2, "./databases/sexo_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/sexo_muni_wide.xlsx")
 
 ## Consultas ----
-(dados <- read_delim("./databases/Consultas_PreNatal_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Consultas_PreNatal_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -170,7 +170,7 @@ write_xlsx(dados2, "./databases/sexo_muni_wide.xlsx")
     ) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
-write_xlsx(dados2, "./databases/consultas_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/consultas_muni_wide.xlsx")
 
 ## Raça da mae ----
 
@@ -182,7 +182,7 @@ write_xlsx(dados2, "./databases/consultas_muni_wide.xlsx")
 
 #---------------------------------------#
 
-(dados <- read_delim("./databases/Raca_mae_muni2022.csv",
+(dados <- read_delim("R/databases/Raca_mae_muni2022.csv",
                      ";",
                      escape_double = FALSE,
                      trim_ws = TRUE))
@@ -212,7 +212,7 @@ dados2$porc_raca_mae_branca[is.nan(dados2$porc_raca_mae_branca)] <-
 dados2$porc_raca_mae_negra[is.nan(dados2$porc_raca_mae_negra)] <-
   NA
 
-write_xlsx(dados2, "./databases/raca_mae_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/raca_mae_muni_wide.xlsx")
 
 ## Tipo de gravidez ----
 
@@ -221,7 +221,7 @@ write_xlsx(dados2, "./databases/raca_mae_muni_wide.xlsx")
 # Tipo de gravidez, conforme a tabela:9: Ignorado 1: Única2: Dupla3: Tripla e mais
 #---------------------------------------#
 
-(dados <- read_delim("./databases/Tipo_gravidez_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Tipo_gravidez_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -236,14 +236,14 @@ write_xlsx(dados2, "./databases/raca_mae_muni_wide.xlsx")
       porc_multipla = (multipla/(total_nascidos-faltante_tipo_gravidez))*100) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
-write_xlsx(dados2, "./databases/tipo_gravidez_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/tipo_gravidez_muni_wide.xlsx")
 
 ## Robson ----
 
-(dados <- read_delim("./databases/Robson_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Robson_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
-(dados_induzido <- read_delim("./databases/Parto_induzido_muni2022.csv", ";",
+(dados_induzido <- read_delim("R/databases/Parto_induzido_muni2022.csv", ";",
                               escape_double = FALSE, trim_ws = TRUE) %>% 
     rename(nascidos_parto_induzido = Nascidos))
 
@@ -273,17 +273,17 @@ write_xlsx(dados2, "./databases/tipo_gravidez_muni_wide.xlsx")
    rename(tipo_robson = Robson, nascidos_parto_induzido = Nascidos) %>% 
    janitor::clean_names()) 
 
-write_xlsx(dados2, "./databases/robson_muni_wide.xlsx")
+write_xlsx(dados2, "R/databases/robson_muni_wide.xlsx")
 
 ### Concatenando todos os dados
-dados_sinasc2021 <- read_excel("./databases/Nascimentos_muni_wide.xlsx")
+dados_sinasc2021 <- read_excel("R/databases/Nascimentos_muni_wide.xlsx")
 
-arquivos <- dir("./databases") %>% 
+arquivos <- dir("R/databases") %>% 
   str_subset("\\.xlsx$") %>% 
   .[!str_detect(., pattern = "Nascimentos_muni_wide.xlsx")]
 
 for(arquivo in arquivos){
-  dados <- read_excel(paste0("./databases/", arquivo))
+  dados <- read_excel(paste0("R/databases/", arquivo))
   dados_sinasc2021 <- full_join(dados_sinasc2021, dados, by = c("UF", "Municipio", "Codigo", "Ano"))
   print(paste("Junção", arquivo))
 }
@@ -351,7 +351,7 @@ crunch::write.csv.gz(dados_sinasc2021, file = "dados_sinasc.csv.gz")
 
 ## Consultas ----
 
-(dados <- read_delim("./databases/Consultas_PreNatal_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Consultas_PreNatal_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -371,7 +371,7 @@ crunch::write.csv.gz(dados_sinasc2021, file = "dados_sinasc.csv.gz")
 
 ## Prematuridade consultas ----
 
-(dados <- read_delim("./databases/Prematuridade_consultas_muni2022.csv", ";", 
+(dados <- read_delim("R/databases/Prematuridade_consultas_muni2022.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -420,7 +420,7 @@ crunch::write.csv.gz(dados_final, "prematuridade_consultas_muni.csv.gz")
 
 ## Outros arquivos que serão tratadas para serem utilizadas no app de maneira mais leve ----
 
-dados_robson <- read_delim("./databases/Robson_muni2022.csv", ";", 
+dados_robson <- read_delim("R/databases/Robson_muni2022.csv", ";", 
                            escape_double = FALSE, trim_ws = TRUE)
 
 dados_robson <- dados_robson %>%
@@ -448,7 +448,7 @@ dados_robson <- left_join(
 
 crunch::write.csv.gz(dados_robson, file = "robson_muni.csv.gz")
 
-dados_robson_cesarea <- read_delim("./databases/Robson_cesar_muni2022.csv", ";", 
+dados_robson_cesarea <- read_delim("R/databases/Robson_cesar_muni2022.csv", ";", 
                                    escape_double = FALSE, trim_ws = TRUE) %>% 
   clean_names()
 

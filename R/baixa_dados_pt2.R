@@ -15,8 +15,7 @@ df_nascidos_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_nascidos_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Nascidos')
 
@@ -34,8 +33,7 @@ df_prematuros_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_prematuros_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gestacao', 'Nascidos')
 
@@ -53,8 +51,7 @@ df_tipo_gravidez_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_tipo_gravidez_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gravidez', 'Nascidos')
 
@@ -72,8 +69,7 @@ df_tipo_parto_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_tipo_parto_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Parto', 'Nascidos')
 
@@ -91,8 +87,7 @@ df_consultas_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_consultas_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Consultas', 'Nascidos')
 
@@ -110,8 +105,7 @@ df_sexo_fetal_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_sexo_fetal_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Sexo', 'Nascidos')
 
@@ -129,8 +123,9 @@ df_apgar1_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup()
+
+df_apgar1_aux$Apgar1 <- as.character(df_apgar1_aux$Apgar1)
 
 names(df_apgar1_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Apgar1', 'Nascidos')
 
@@ -148,8 +143,9 @@ df_apgar5_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup()
+
+df_apgar5_aux$Apgar5 <- as.character(df_apgar5_aux$Apgar5)
 
 names(df_apgar5_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Apgar5', 'Nascidos')
 
@@ -167,8 +163,7 @@ df_anomalias_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_anomalias_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Anomalia', 'Nascidos')
 
@@ -187,8 +182,7 @@ df_peso_fetal_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_peso_fetal_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Nascidos')
 
@@ -206,8 +200,7 @@ df_racamae_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_racamae_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Raca_mae', 'Nascidos')
 
@@ -225,8 +218,7 @@ df_robson_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_robson_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Robson', 'Nascidos')
 
@@ -244,8 +236,7 @@ df_prematuro_pcdas_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_prematuro_pcdas_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gestacao', 'Nascidos')
 
@@ -264,8 +255,7 @@ df_ces_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STCESPARTO) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_ces_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Robson', 'cesarea_antes_do_parto', 'Nascidos')
 
@@ -284,8 +274,7 @@ df_parto_induzido_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STTRABPART) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup()
 
 names(df_parto_induzido_aux) <- c('UF','Municipio', 'Codigo', 'Ano', 'Robson', 'parto_induzido', 'Nascidos')
 
@@ -303,8 +292,7 @@ df_prematuridade_consultas_aux <- dados_preliminares_2022 |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_prematuridade_consultas_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gestacao', 'Consultas', 'Nascidos')
 
@@ -315,15 +303,14 @@ write.table(df_prematuridade_consultas_2022, 'R/databases/Prematuridade_consulta
 
 
 # Prematuros, cesáreas e Robson -------------------------------------------
-df_robson_cesar_2021 <- read.csv2("R/databases/Robson_cesar_muni2022.csv")
+df_robson_cesar_2021 <- read.csv2("R/databases/Robson_cesar_muni2021.csv")
 
 df_robson_cesar_aux <- dados_preliminares_2022 |>
   select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO) |>
   mutate(nascidos = 1) |>
   group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO) |>
   summarise(nascidos = sum(nascidos)) |>
-  ungroup() |>
-  mutate_if(is.numeric, as.character)
+  ungroup() 
 
 names(df_robson_cesar_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Robson', 'Parto', 'Nascidos')
 
