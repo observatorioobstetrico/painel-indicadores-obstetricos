@@ -345,7 +345,7 @@ dados_sinasc2021 <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, pais, sigla_uf, 3:62)
 
-crunch::write.csv.gz(dados_sinasc2021, file = "dados_sinasc.csv.gz")
+crunch::write.csv.gz(dados_sinasc2021, file = "dados_oobr_indicadores_obstetricos_sinasc_2022.csv.gz")
 
 # Tratamento base consultas e prematuridade ----
 
@@ -416,7 +416,7 @@ dados_final <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, pais, sigla_uf, 3:15)
 
-crunch::write.csv.gz(dados_final, "prematuridade_consultas_muni.csv.gz")
+crunch::write.csv.gz(dados_final, "dados_oobr_indicadores_obstetricos_prematuridade_consultas_2022.csv.gz")
 
 ## Outros arquivos que serão tratadas para serem utilizadas no app de maneira mais leve ----
 
@@ -446,7 +446,7 @@ dados_robson <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, sigla_uf, 3:5)
 
-crunch::write.csv.gz(dados_robson, file = "robson_muni.csv.gz")
+crunch::write.csv.gz(dados_robson, file = "dados_oobr_indicadores_obstetricos_robson_2022.csv.gz")
 
 dados_robson_cesarea <- read_delim("R/databases/Robson_cesar_muni2022.csv", ";", 
                                    escape_double = FALSE, trim_ws = TRUE) %>% 
@@ -481,6 +481,6 @@ dados_robson_cesarea <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, pais, sigla_uf, 3:6)
 
-crunch::write.csv.gz(dados_robson_cesarea, file = "robson_cesar_muni.csv.gz")
+crunch::write.csv.gz(dados_robson_cesarea, file = "dados_oobr_indicadores_obstetricos_robson_cesareas_2022.csv.gz")
 
 

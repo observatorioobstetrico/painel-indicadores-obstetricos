@@ -125,7 +125,7 @@ df_apgar1_aux <- dados_preliminares_2022 |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup()
 
-df_apgar1_aux$Apgar1 <- as.character(df_apgar1_aux$Apgar1)
+df_apgar1_aux$APGAR1 <- as.character(df_apgar1_aux$APGAR1)
 
 names(df_apgar1_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Apgar1', 'Nascidos')
 
@@ -145,7 +145,7 @@ df_apgar5_aux <- dados_preliminares_2022 |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup()
 
-df_apgar5_aux$Apgar5 <- as.character(df_apgar5_aux$Apgar5)
+df_apgar5_aux$APGAR5 <- as.character(df_apgar5_aux$APGAR5)
 
 names(df_apgar5_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Apgar5', 'Nascidos')
 
@@ -318,3 +318,4 @@ df_robson_cesar_2022 <- full_join(df_robson_cesar_2021, df_robson_cesar_aux)
 
 # Exportando os dados (Nascimentos_muni = UF, Município, Ano e Nascimentos)
 write.table(df_robson_cesar_2022, 'R/databases/Robson_cesar_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
+
