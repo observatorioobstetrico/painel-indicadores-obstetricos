@@ -23,18 +23,19 @@ runtime: shiny
   border-color: #0A1E3C !important;
 }
 .navbar-brand {
-    color: white !important;
+    color: #ffffff !important;
     font-size: 1.3rem;
     vertical-align: middle;
 }
-.section.sidebar {
-  top: 50px;
-  background-color: white;
-  color: #000000
-}
 body {
     font-size: 1em;
+    background: white;
     padding: 83px 15px 8px;
+}
+.section.sidebar {
+  top: 50px;
+  background-color: #eaf2ff;
+  color: #000000
 }
 .negrito {
   font-weight: 700;
@@ -44,17 +45,6 @@ body {
     font-size: 1.1em;
     font-weight: 600;
     padding: 7px 10px 4px;
-}
-.nav-tabs-custom > .nav-tabs > li.active > a, .nav-tabs-custom > .nav-tabs > li.active:hover > a {
-    background-color: #fff;
-    color: #373a3c;
-    font-weight: 600;
-}
-.nav-tabs-custom > .nav-tabs > li > a, .nav-tabs-custom > .nav-tabs > li > a:hover {
-    background: white;
-    margin: 0;
-    color: #373a3c;
-    font-weight: 500;
 }
 </style>
 
@@ -80,6 +70,7 @@ library(shinythemes)
 library(shinyHeatmaply)
 library(shinydashboard)
 library(shinyjs)
+library(reactable)
 
 # SINASC --------------------
 # tratamento
@@ -106,6 +97,7 @@ dados_robson[["grupo_robson_aux"]] <-
   factor(dados_robson[["grupo_robson_aux"]], niveis)
 dados_robson_cesarea[["grupo_robson_aux"]] <-
   factor(dados_robson_cesarea[["grupo_robson_aux"]], niveis)
+
 ```
 
 Sobre
@@ -178,10 +170,10 @@ knitr::include_graphics(c(
 
 
 
-Nascimentos {data-navmenu="Nascidos"}
+Nascimentos {data-navmenu="Visualizações"}
 =============================================
 
-Inputs {.sidebar data-width=350}
+Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
 ```{r input-nasc}
 hr(); strong("Nascimentos"); hr()
@@ -399,10 +391,10 @@ shiny::renderPlot({
 })
 ```
 
-Partos Prematuros {data-navmenu="Nascidos"}
+Partos Prematuros {data-navmenu="Visualizações"}
 =============================================
 
-Inputs {.sidebar data-width=350}
+Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
 <br>
 ```{r input-pp}
@@ -737,10 +729,10 @@ shiny::renderPlot({
 })
 ```
 
-Partos Cesáreas {data-navmenu="Nascidos"}
+Partos Cesáreas {data-navmenu="Visualizações"}
 =============================================
 
-Inputs {.sidebar data-width=350}
+Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
 <br>
 ```{r input-pc}
@@ -1076,10 +1068,10 @@ shiny::renderPlot({
 })
 ```
 
-Anomalias Congênitas {data-navmenu="Nascidos"}
+Anomalias Congênitas {data-navmenu="Visualizações"}
 =============================================
 
-Inputs {.sidebar data-width=350}
+Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
 <br>
 ```{r input-anc}
@@ -1442,10 +1434,10 @@ shiny::renderPlot({
 })
 ```
 
-Consultas de Pré-natal {data-navmenu="Nascidos"}
+Consultas de Pré-natal {data-navmenu="Visualizações"}
 =============================================
 
-Inputs {.sidebar data-width=350}
+Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
 <br>
 ```{r input-cpn}
@@ -2056,10 +2048,10 @@ shiny::renderPlot({
 })
 ```
 
-Classificação de Robson {data-navmenu="Nascidos"}
+Classificação de Robson {data-navmenu="Visualizações"}
 =============================================
 
-Inputs {.sidebar data-width=350}
+Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
 <br>
 ```{r input-cr}
@@ -2355,10 +2347,10 @@ renderPlot({
 })
 ```
 
-Robson e Cesáreas {data-navmenu="Nascidos"}
+Robson e Cesáreas {data-navmenu="Visualizações"}
 =============================================
 
-Inputs {.sidebar data-width=350}
+Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
 <br>
 ```{r input-rc}
@@ -3174,7 +3166,7 @@ renderPlot({
         filter(
           grupo_robson == input$SelectGRob,
           municipio == input$SelectMunRC,
-          uf == input$SelectEstadoMunRC,,
+          uf == input$SelectEstadoMunRC,
           (ano >= input$anosRC[1] &
              ano <= input$anosRC[2])
         ) %>%

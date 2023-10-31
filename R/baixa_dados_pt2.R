@@ -2,24 +2,94 @@ library(dplyr)
 library(janitor)
 library(tidyr)
 library(data.table)
+library(getPass)
+library(repr)
+library(httr)
+library(microdatasus)
 
-# Lendo o arquivo com os dados preliminares do SINASC de 2022
-dados_preliminares_2022 <- fread("R/databases/DN22OPEN_T.csv", encoding = "UTF-8") 
+token = getPass()  #Token de acesso à API da PCDaS
+
+url_base = "https://bigdata-api.fiocruz.br"
+
+convertRequestToDF <- function(request){
+  variables = unlist(content(request)$columns)
+  variables = variables[names(variables) == "name"]
+  column_names <- unname(variables)
+  values = content(request)$rows
+  df <- as.data.frame(do.call(rbind,lapply(values,function(r) {
+    row <- r
+    row[sapply(row, is.null)] <- NA
+    rbind(unlist(row))
+  } )))
+  names(df) <- column_names
+  return(df)
+}
+
+endpoint <- paste0(url_base,"/","sql_query")
+
+# Criando data.frames auxiliares ------------------------------------------
+## Obtendo um dataframe com as regiões, UFs e nomes de cada município -------
+df_aux_municipios <- data.frame()
+params = paste0('{
+      "token": {
+        "token": "',token,'"
+      },
+      "sql": {
+        "sql": {"query":" SELECT res_codigo_adotado, res_MUNNOMEX, res_SIGLA_UF, res_REGIAO, COUNT(1)',
+                ' FROM \\"datasus-sinasc\\"',
+                ' GROUP BY res_codigo_adotado, res_MUNNOMEX, res_SIGLA_UF, res_REGIAO",
+                        "fetch_size": 65000}
+      }
+    }')
+
+request <- POST(url = endpoint, body = params, encode = "form")
+df_aux_municipios <- convertRequestToDF(request)
+names(df_aux_municipios) <- c("CODMUNRES", "res_MUNNOMEX", "res_SIGLA_UF", "res_REGIAO", "nascidos")
+
+df_aux_municipios <- df_aux_municipios |>
+  select(!nascidos) |>
+  arrange(CODMUNRES)
+
+
+# Baixando os dados preliminares do SINASC de 2022 ------------------------
+dados_preliminares_2022_aux <- fetch_datasus(
+  year_start = 2022, 
+  year_end = 2022,
+  information_system = "SINASC"
+)
+
+dados_preliminares_2022 <- left_join(dados_preliminares_2022_aux, df_aux_municipios) |>
+  mutate(
+    ano_nasc = as.numeric(substr(DTNASC, nchar(DTNASC) - 3, nchar(DTNASC))), 
+    .after = DTNASC, 
+    .keep = "unused"
+  ) |>
+  mutate_at(
+    vars(CODMUNRES, GESTACAO, GRAVIDEZ, PARTO, CONSULTAS, SEXO, IDANOMAL, RACACORMAE, TPROBSON, STCESPARTO, STTRABPART),
+    as.numeric
+  ) |>
+  mutate(
+    GESTACAO = ifelse(is.na(GESTACAO), 9, GESTACAO),
+    PARTO = ifelse(is.na(PARTO), 9, PARTO),
+    CONSULTAS = ifelse(is.na(CONSULTAS), 9, CONSULTAS),
+    GRAVIDEZ = ifelse(is.na(GRAVIDEZ), 9, GRAVIDEZ)
+  )
 
 
 # Número de nascidos vivos ------------------------------------------------
 df_nascidos_2021 <- read.csv2("R/databases/Nascimentos_muni2021.csv")
 
 df_nascidos_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_nascidos_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Nascidos')
 
-df_nascidos_2022 <- full_join(df_nascidos_2021, df_nascidos_aux)
+df_nascidos_2022 <- full_join(df_nascidos_2021, df_nascidos_aux) |>
+  arrange(UF, Municipio)
 
 # Exportando os dados 
 write.table(df_nascidos_2022, 'R/databases/Nascimentos_muni2022.csv', sep = ";", dec = ".", row.names = FALSE)
@@ -29,13 +99,16 @@ write.table(df_nascidos_2022, 'R/databases/Nascimentos_muni2022.csv', sep = ";",
 df_prematuros_2021 <- read.csv2("R/databases/Prematuridade_muni2021.csv")
 
 df_prematuros_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GESTACAO) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GESTACAO) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_prematuros_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gestacao', 'Nascidos')
+
+sort(unique(df_prematuros_2021$Gestacao), na.last = TRUE)
+sort(unique(df_prematuros_aux$Gestacao), na.last = TRUE)
 
 df_prematuros_2022 <- full_join(df_prematuros_2021, df_prematuros_aux)
 
@@ -47,13 +120,16 @@ write.table(df_prematuros_2022, 'R/databases/Prematuridade_muni2022.csv', sep = 
 df_tipo_gravidez_2021 <- read.csv2("R/databases/Tipo_gravidez_muni2021.csv")
 
 df_tipo_gravidez_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GRAVIDEZ) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GRAVIDEZ) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GRAVIDEZ) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_tipo_gravidez_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gravidez', 'Nascidos')
+
+sort(unique(df_tipo_gravidez_2021$Gravidez), na.last = TRUE)
+sort(unique(df_tipo_gravidez_aux$Gravidez), na.last = TRUE)
 
 df_tipo_gravidez_2022 <- full_join(df_tipo_gravidez_2021, df_tipo_gravidez_aux)
 
@@ -65,13 +141,16 @@ write.table(df_tipo_gravidez_2022, 'R/databases/Tipo_gravidez_muni2022.csv', sep
 df_tipo_parto_2021 <- read.csv2("R/databases/Tipo_parto_muni2021.csv")
 
 df_tipo_parto_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, PARTO) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PARTO) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, PARTO) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_tipo_parto_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Parto', 'Nascidos')
+
+sort(unique(df_tipo_parto_2021$Parto), na.last = TRUE)
+sort(unique(df_tipo_parto_aux$Parto), na.last = TRUE)
 
 df_tipo_parto_2022 <- full_join(df_tipo_parto_2021, df_tipo_parto_aux)
 
@@ -83,13 +162,16 @@ write.table(df_tipo_parto_2022, 'R/databases/Tipo_parto_muni2022.csv', sep = ";"
 df_consultas_2021 <- read.csv2("R/databases/Consultas_PreNatal_muni2021.csv")
 
 df_consultas_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, CONSULTAS) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, CONSULTAS) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, CONSULTAS) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_consultas_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Consultas', 'Nascidos')
+
+sort(unique(df_consultas_2021$Consultas), na.last = TRUE)
+sort(unique(df_consultas_aux$Consultas), na.last = TRUE)
 
 df_consultas_2022 <- full_join(df_consultas_2021, df_consultas_aux)
 
@@ -101,13 +183,16 @@ write.table(df_consultas_2022, 'R/databases/Consultas_PreNatal_muni2022.csv', se
 df_sexo_fetal_2021 <- read.csv2("R/databases/Sexo_fetal_muni2021.csv")
 
 df_sexo_fetal_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, SEXO) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, SEXO) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, SEXO) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_sexo_fetal_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Sexo', 'Nascidos')
+
+sort(unique(df_sexo_fetal_2021$Sexo), na.last = TRUE)
+sort(unique(df_sexo_fetal_aux$Sexo), na.last = TRUE)
 
 df_sexo_fetal_2022 <- full_join(df_sexo_fetal_2021, df_sexo_fetal_aux)
 
@@ -119,15 +204,16 @@ write.table(df_sexo_fetal_2022, 'R/databases/Sexo_fetal_muni2022.csv', sep = ";"
 df_apgar1_2021 <- read.csv2("R/databases/Apgar1_muni2021.csv")
 
 df_apgar1_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, APGAR1) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR1) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, APGAR1) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup()
 
-df_apgar1_aux$APGAR1 <- as.character(df_apgar1_aux$APGAR1)
-
 names(df_apgar1_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Apgar1', 'Nascidos')
+
+sort(unique(df_apgar1_2021$Apgar1), na.last = TRUE)
+sort(unique(df_apgar1_aux$Apgar1), na.last = TRUE)
 
 df_apgar1_2022 <- full_join(df_apgar1_2021, df_apgar1_aux)
 
@@ -139,15 +225,16 @@ write.table(df_apgar1_2022, 'R/databases/Apgar1_muni2022.csv', sep = ";", dec = 
 df_apgar5_2021 <- read.csv2("R/databases/Apgar5_muni2021.csv")
 
 df_apgar5_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, APGAR5) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, APGAR5) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, APGAR5) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup()
 
-df_apgar5_aux$APGAR5 <- as.character(df_apgar5_aux$APGAR5)
-
 names(df_apgar5_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Apgar5', 'Nascidos')
+
+sort(unique(df_apgar5_2021$Apgar5), na.last = TRUE)
+sort(unique(df_apgar5_aux$Apgar5), na.last = TRUE)
 
 df_apgar5_2022 <- full_join(df_apgar5_2021, df_apgar5_aux)
 
@@ -159,13 +246,16 @@ write.table(df_apgar5_2022, 'R/databases/Apgar5_muni2022.csv', sep = ";", dec = 
 df_anomalias_2021 <- read.csv2("R/databases/Anomalias_muni2021.csv")
 
 df_anomalias_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, IDANOMAL) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, IDANOMAL) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, IDANOMAL) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_anomalias_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Anomalia', 'Nascidos')
+
+sort(unique(df_anomalias_2021$Anomalia), na.last = TRUE)
+sort(unique(df_anomalias_aux$Anomalia), na.last = TRUE)
 
 df_anomalias_2022 <- full_join(df_anomalias_2021, df_anomalias_aux)
 
@@ -177,10 +267,10 @@ write.table(df_anomalias_2022, 'R/databases/Anomalias_muni2022.csv', sep = ";", 
 df_peso_fetal_2021 <- read.csv2("R/databases/Peso_menor_2500_muni2021.csv")
 
 df_peso_fetal_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, PESO) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, PESO) |>
   filter(PESO < 2500) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
@@ -196,13 +286,16 @@ write.table(df_peso_fetal_2022, 'R/databases/Peso_menor_2500_muni2022.csv', sep 
 df_racamae_2021 <- read.csv2("R/databases/Raca_mae_muni2021.csv")
 
 df_racamae_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, RACACORMAE) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, RACACORMAE) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, RACACORMAE) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_racamae_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Raca_mae', 'Nascidos')
+
+sort(unique(df_racamae_2021$Raca_mae), na.last = TRUE)
+sort(unique(df_racamae_aux$Raca_mae), na.last = TRUE)
 
 df_racamae_2022 <- full_join(df_racamae_2021, df_racamae_aux)
 
@@ -214,13 +307,16 @@ write.table(df_racamae_2022, 'R/databases/Raca_mae_muni2022.csv', sep = ";", dec
 df_robson_2021 <- read.csv2("R/databases/Robson_muni2021.csv")
 
 df_robson_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_robson_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Robson', 'Nascidos')
+
+sort(unique(df_robson_2021$Robson), na.last = TRUE)
+sort(unique(df_robson_aux$Robson), na.last = TRUE)
 
 df_robson_2022 <- full_join(df_robson_2021, df_robson_aux)
 
@@ -232,13 +328,16 @@ write.table(df_robson_2022, 'R/databases/Robson_muni2022.csv', sep = ";", dec = 
 df_prematuro_pcdas_2021 <- read.csv2("R/databases/Prematuro_PCDAS_muni2021.csv")
 
 df_prematuro_pcdas_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GESTACAO) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GESTACAO) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_prematuro_pcdas_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gestacao', 'Nascidos')
+
+sort(unique(df_prematuro_pcdas_2021$Gestacao), na.last = TRUE)
+sort(unique(df_prematuro_pcdas_aux$Gestacao), na.last = TRUE)
 
 df_prematuro_pcdas_2022 <- full_join(df_prematuro_pcdas_2021, df_prematuro_pcdas_aux)
 
@@ -250,14 +349,17 @@ write.table(df_prematuro_pcdas_2022, 'R/databases/Prematuro_PCDAS_muni2022.csv',
 df_ces_2021 <- read.csv2("R/databases/Cesaria_antes_do_parto_muni2021.csv")
 
 df_ces_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STCESPARTO) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON, STCESPARTO) |>
   filter(TPROBSON %in% c(2, 4)) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STCESPARTO) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON, STCESPARTO) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_ces_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Robson', 'cesarea_antes_do_parto', 'Nascidos')
+
+sort(unique(df_ces_2021$cesarea_antes_do_parto), na.last = TRUE)
+sort(unique(df_ces_aux$cesarea_antes_do_parto), na.last = TRUE)
 
 df_ces_2022 <- full_join(df_ces_2021, df_ces_aux)
 
@@ -269,14 +371,17 @@ write.table(df_ces_2022, 'R/databases/Cesaria_antes_do_parto_muni2022.csv', sep 
 df_parto_induzido_2021 <- read.csv2("R/databases/Parto_induzido_muni2021.csv")
 
 df_parto_induzido_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STTRABPART) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON, STTRABPART) |>
   filter(TPROBSON %in% c(2, 4)) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, STTRABPART) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON, STTRABPART) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup()
 
 names(df_parto_induzido_aux) <- c('UF','Municipio', 'Codigo', 'Ano', 'Robson', 'parto_induzido', 'Nascidos')
+
+sort(unique(df_parto_induzido_2021$parto_induzido), na.last = TRUE)
+sort(unique(df_parto_induzido_aux$parto_induzido), na.last = TRUE)
 
 df_parto_induzido_2022 <- full_join(df_parto_induzido_2021, df_parto_induzido_aux)
 
@@ -288,13 +393,19 @@ write.table(df_parto_induzido_2022, 'R/databases/Parto_induzido_muni2022.csv', s
 df_prematuridade_consultas_2021 <- read.csv2("R/databases/Prematuridade_consultas_muni2021.csv")
 
 df_prematuridade_consultas_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GESTACAO, CONSULTAS) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, GESTACAO, CONSULTAS) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, GESTACAO, CONSULTAS) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
 names(df_prematuridade_consultas_aux) <- c('UF', 'Municipio', 'Codigo', 'Ano', 'Gestacao', 'Consultas', 'Nascidos')
+
+sort(unique(df_prematuridade_consultas_2021$Gestacao), na.last = TRUE)
+sort(unique(df_prematuridade_consultas_aux$Gestacao), na.last = TRUE)
+
+sort(unique(df_prematuridade_consultas_2021$Consultas), na.last = TRUE)
+sort(unique(df_prematuridade_consultas_aux$Consultas), na.last = TRUE)
 
 df_prematuridade_consultas_2022 <- full_join(df_prematuridade_consultas_2021, df_prematuridade_consultas_aux)
 
@@ -306,9 +417,9 @@ write.table(df_prematuridade_consultas_2022, 'R/databases/Prematuridade_consulta
 df_robson_cesar_2021 <- read.csv2("R/databases/Robson_cesar_muni2021.csv")
 
 df_robson_cesar_aux <- dados_preliminares_2022 |>
-  select(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO) |>
+  select(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON, PARTO) |>
   mutate(nascidos = 1) |>
-  group_by(res_SIGLA_UF, res_MUNNOMEX, res_codigo_adotado, ano_nasc, TPROBSON, PARTO) |>
+  group_by(res_SIGLA_UF, res_MUNNOMEX, CODMUNRES, ano_nasc, TPROBSON, PARTO) |>
   summarise(nascidos = sum(nascidos)) |>
   ungroup() 
 
