@@ -74,15 +74,15 @@ library(reactable)
 
 # SINASC --------------------
 # tratamento
-dados_sinasc2022 <- read.csv("dados_oobr_indicadores_obstetricos_sinasc_2022.csv.gz") %>%
+dados_sinasc2023 <- read.csv("dados_oobr_indicadores_obstetricos_sinasc_2023.csv.gz") %>%
   clean_names()
 
-dados_premat_cons <- read.csv("dados_oobr_indicadores_obstetricos_prematuridade_consultas_2022.csv.gz") %>%
+dados_premat_cons <- read.csv("dados_oobr_indicadores_obstetricos_prematuridade_consultas_2023.csv.gz") %>%
   clean_names()
 
-dados_robson <- read.csv("dados_oobr_indicadores_obstetricos_robson_2022.csv.gz")
+dados_robson <- read.csv("dados_oobr_indicadores_obstetricos_robson_2023.csv.gz")
 
-dados_robson_cesarea <- read.csv("dados_oobr_indicadores_obstetricos_robson_cesareas_2022.csv.gz") %>%
+dados_robson_cesarea <- read.csv("dados_oobr_indicadores_obstetricos_robson_cesareas_2023.csv.gz") %>%
   clean_names()
 
 tabela_aux_municipios <- read.csv("tabela_auxiliar_municipios.csv")
@@ -115,7 +115,7 @@ Conta com **pesquisadores** da <a href = https://www.ufes.br target = _blank> Un
 
 <h3><span style = "font-weight: bold;">Os dados</span></h3>
 
-São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2022 **(sendo estes preliminares)**, atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em 24 de novembro de 2023. Os dados podem ser acessados em: Herzog, R. S.; Francisco, R. P. V.; Rodrigues, A. S. Indicadores Obstétricos [banco de dados], 2022, Observatório Obstétrico Brasileiro (OOBr). Disponível em DOI: https://doi.org/10.7303/syn35916919.
+São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos a partir do ano de 1996. Nessa plataforma, os dados do SINASC são previamente tratados pela PCDaS com base no fluxo ETL (_Extract_, _Transform_ e _Load_). Atualmente, a PCDaS disponibiliza dados do SINASC até 2023 **(sendo estes e os de 2022 preliminares)**, atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em 04 de dezembro de 2023. Os dados podem ser acessados em: Herzog, R. S.; Francisco, R. P. V.; Rodrigues, A. S. Indicadores Obstétricos [banco de dados], 2022, Observatório Obstétrico Brasileiro (OOBr). Disponível em DOI: https://doi.org/10.7303/syn35916919.
 
 <h3><span style = "font-weight: bold;">Como citar esse painel</span></h3>
 
@@ -177,7 +177,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-nasc}
 hr(); strong("Nascimentos"); hr()
-p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 e 2023 são preliminares."))))
 selectInput(
   inputId = "SelectMunEst_sinasc",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -220,10 +220,11 @@ observeEvent(input$SelectEstadoMun_sinasc, {
 shiny::sliderInput(
   inputId = "anos_sinasc",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2022$ano),
-  max = max(dados_sinasc2022$ano),
-  value = c(min(dados_sinasc2022$ano), max(dados_sinasc2022$ano)),
-  sep = ""
+  min = min(dados_sinasc2023$ano),
+  max = max(dados_sinasc2023$ano),
+  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  sep = "",
+  step = 1
 )
 ```
 <br>
@@ -240,7 +241,7 @@ Row {data-width=650}
 ```{r table-nasc}
 DT::renderDT({
   if (input$SelectMunEst_sinasc == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(nascidos = sum(nascidos)) %>%
       filter(ano <= input$anos_sinasc[2],
@@ -266,7 +267,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEst_sinasc == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(nascidos = sum(nascidos)) %>%
       ungroup() %>%
@@ -293,7 +294,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMun_sinasc,
         uf == input$SelectEstadoMun_sinasc,
@@ -329,7 +330,7 @@ Row {data-width=650}
 ```{r graph-nasc}
 shiny::renderPlot({
   if (input$SelectMunEst_sinasc == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(nascidos = sum(nascidos)) %>%
       filter(ano <= input$anos_sinasc[2], ano >= input$anos_sinasc[1]) %>%
@@ -348,7 +349,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEst_sinasc == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(uf == input$SelectEst_sinasc,
              ano <= input$anos_sinasc[2],
              ano >= input$anos_sinasc[1]) %>%
@@ -369,7 +370,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMun_sinasc,
         uf == input$SelectEstadoMun_sinasc,
@@ -396,10 +397,9 @@ Partos Prematuros {data-navmenu="Visualizações"}
 
 Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
-<br>
 ```{r input-pp}
 hr(); strong("Partos Prematuros"); hr()
-p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 e 2023 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPP",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -442,10 +442,11 @@ observeEvent(input$SelectEstadoMunPP, {
 sliderInput(
   inputId = "anosPP",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2022$ano),
-  max = max(dados_sinasc2022$ano),
-  value = c(min(dados_sinasc2022$ano), max(dados_sinasc2022$ano)),
-  sep = ""
+  min = min(dados_sinasc2023$ano),
+  max = max(dados_sinasc2023$ano),
+  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  sep = "",
+  step = 1
 )
 ```
 <br>
@@ -470,7 +471,7 @@ Row {data-width=650}
 ```{r table-pp}
 DT::renderDT({
   if (input$SelectMunEstPP == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -515,7 +516,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstPP == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -561,7 +562,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMunPP,
         uf == input$SelectEstadoMunPP,
@@ -612,7 +613,7 @@ Row {data-width=650}
 ```{r graph-pp}
 shiny::renderPlot({
   if (input$SelectMunEstPP == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -650,7 +651,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEstPP == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -691,7 +692,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMunPP,
         uf == input$SelectEstadoMunPP,
@@ -734,10 +735,9 @@ Partos Cesáreas {data-navmenu="Visualizações"}
 
 Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
-<br>
 ```{r input-pc}
 hr(); strong("Partos Cesáreas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 e 2023 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPC",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -781,10 +781,11 @@ observeEvent(input$SelectEstadoMunPC, {
 sliderInput(
   inputId = "anosPC",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2022$ano),
-  max = max(dados_sinasc2022$ano),
-  value = c(min(dados_sinasc2022$ano), max(dados_sinasc2022$ano)),
-  sep = ""
+  min = min(dados_sinasc2023$ano),
+  max = max(dados_sinasc2023$ano),
+  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  sep = "",
+  step = 1
 )
 ```
 <br>
@@ -809,7 +810,7 @@ Row {data-width=650}
 ```{r table-pc}
 DT::renderDT({
   if (input$SelectMunEstPC == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -853,7 +854,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstPC == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -899,7 +900,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMunPC,
         uf == input$SelectEstadoMunPC,
@@ -951,7 +952,7 @@ Row {data-width=650}
 ```{r graph-pc}
 shiny::renderPlot({
   if (input$SelectMunEstPC == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -989,7 +990,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEstPC == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1029,7 +1030,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMunPC,
         uf == input$SelectEstadoMunPC,
@@ -1073,10 +1074,9 @@ Anomalias Congênitas {data-navmenu="Visualizações"}
 
 Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
-<br>
 ```{r input-anc}
 hr(); strong("Anomalias Congênitas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 e 2023 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstAN",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -1119,10 +1119,11 @@ observeEvent(input$SelectEstadoMunAN, {
 sliderInput(
   inputId = "anosAN",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2022$ano[!is.na(dados_sinasc2022$porc_anomalia)]),
-  max = max(dados_sinasc2022$ano),
-  value = c(min(dados_sinasc2022$ano), max(dados_sinasc2022$ano)),
-  sep = ""
+  min = min(dados_sinasc2023$ano[!is.na(dados_sinasc2023$porc_anomalia)]),
+  max = max(dados_sinasc2023$ano),
+  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  sep = "",
+  step = 1
 )
 ```
 <br>
@@ -1147,7 +1148,7 @@ Row {data-width=650}
 ```{r table-anc}
 DT::renderDT({
   if (input$SelectMunEstAN == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1202,7 +1203,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstAN == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1259,7 +1260,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMunAN,
         uf == input$SelectEstadoMunAN,
@@ -1309,7 +1310,7 @@ Row {data-width=650}
 ```{r graph-anc}
 shiny::renderPlot({
   if (input$SelectMunEstAN == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1351,7 +1352,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEstAN == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1395,7 +1396,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMunAN,
         uf == input$SelectEstadoMunAN,
@@ -1439,10 +1440,9 @@ Consultas de Pré-natal {data-navmenu="Visualizações"}
 
 Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
-<br>
 ```{r input-cpn}
 hr(); strong("Consultas de Pré-natal"); hr()
-p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 e 2023 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCPN",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -1486,10 +1486,11 @@ observeEvent(input$SelectEstadoMunCPN, {
 sliderInput(
   inputId = "anosCPN",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2022$ano),
-  max = max(dados_sinasc2022$ano),
-  value = c(min(dados_sinasc2022$ano), max(dados_sinasc2022$ano)),
-  sep = ""
+  min = min(dados_sinasc2023$ano),
+  max = max(dados_sinasc2023$ano),
+  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  sep = "",
+  step = 1
 )
 ```
 <br>
@@ -1514,7 +1515,7 @@ Row {data-width=650}
 ```{r table-cpn}
 DT::renderDT({
   if (input$SelectMunEstCPN == 'Nacional') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1580,7 +1581,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstCPN == 'Estadual') {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1648,7 +1649,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2022 %>%
+    dados_sinasc2023 %>%
       filter(
         municipio == input$SelectMunCPN,
         uf == input$SelectEstadoMunCPN,
@@ -2053,10 +2054,9 @@ Classificação de Robson {data-navmenu="Visualizações"}
 
 Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
-<br>
 ```{r input-cr}
 hr(); strong("Classificação de Robson"); hr()
-p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 e 2023 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCRob",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -2352,10 +2352,9 @@ Robson e Cesáreas {data-navmenu="Visualizações"}
 
 Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 75px;"}
 ---------------------------------------------
-<br>
 ```{r input-rc}
 hr(); strong("Robson e Cesáreas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2022 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2022 e 2023 são preliminares."))))
 shiny::selectInput(
   inputId = "SelectMunEstRC",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -2420,7 +2419,8 @@ shiny::conditionalPanel(
     min = min(dados_robson_cesarea$ano[dados_robson_cesarea$ano >= 2014]),
     max = max(dados_robson_cesarea$ano),
     value = c(min(dados_robson_cesarea$ano[dados_robson_cesarea$ano >= 2014]), max(dados_robson_cesarea$ano)),
-    sep = ""
+    sep = "",
+  step = 1
   )
 )
 ```
