@@ -52,6 +52,8 @@ df_aux_municipios <- df_aux_municipios |>
 
 
 # Baixando os dados preliminares do SINASC de 2023 ------------------------
+download.file("https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SINASC/SINASC_2023.csv", "R/databases/DNOPEN23.csv", mode = "wb")
+
 dados_preliminares_2022_aux1 <- fetch_datasus(
   year_start = 2022, 
   year_end = 2023,
