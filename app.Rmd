@@ -74,15 +74,15 @@ library(reactable)
 
 # SINASC --------------------
 # tratamento
-dados_sinasc2023 <- read.csv("dados_oobr_indicadores_obstetricos_sinasc_2023.csv.gz") %>%
+dados_sinasc2023 <- read.csv("dados_oobr_indicadores_obstetricos_sinasc_1996_2023.csv.gz") %>%
   clean_names()
 
-dados_premat_cons <- read.csv("dados_oobr_indicadores_obstetricos_prematuridade_consultas_2023.csv.gz") %>%
+dados_premat_cons <- read.csv("dados_oobr_indicadores_obstetricos_prematuridade_consultas_1996_2023.csv.gz") %>%
   clean_names()
 
-dados_robson <- read.csv("dados_oobr_indicadores_obstetricos_robson_2023.csv.gz")
+dados_robson <- read.csv("dados_oobr_indicadores_obstetricos_robson_1996_2023.csv.gz")
 
-dados_robson_cesarea <- read.csv("dados_oobr_indicadores_obstetricos_robson_cesareas_2023.csv.gz") %>%
+dados_robson_cesarea <- read.csv("dados_oobr_indicadores_obstetricos_robson_cesareas_1996_2023.csv.gz") %>%
   clean_names()
 
 tabela_aux_municipios <- read.csv("tabela_auxiliar_municipios.csv")
