@@ -74,15 +74,15 @@ library(reactable)
 
 # SINASC --------------------
 # tratamento
-dados_sinasc2023 <- read.csv("dados_oobr_indicadores_obstetricos_sinasc_1996_2023.csv.gz") %>%
+dados_sinasc2023 <- read.csv(gzfile("dados_oobr_indicadores_obstetricos_sinasc_1996_2023.csv.gz")) %>%
   clean_names()
 
-dados_premat_cons <- read.csv("dados_oobr_indicadores_obstetricos_prematuridade_consultas_1996_2023.csv.gz") %>%
+dados_premat_cons <- read.csv(gzfile("dados_oobr_indicadores_obstetricos_prematuridade_consultas_1996_2023.csv.gz")) %>%
   clean_names()
 
-dados_robson <- read.csv("dados_oobr_indicadores_obstetricos_robson_1996_2023.csv.gz")
+dados_robson <- read.csv(gzfile("dados_oobr_indicadores_obstetricos_robson_1996_2023.csv.gz"))
 
-dados_robson_cesarea <- read.csv("dados_oobr_indicadores_obstetricos_robson_cesareas_1996_2023.csv.gz") %>%
+dados_robson_cesarea <- read.csv(gzfile("dados_oobr_indicadores_obstetricos_robson_cesareas_1996_2023.csv.gz")) %>%
   clean_names()
 
 tabela_aux_municipios <- read.csv("tabela_auxiliar_municipios.csv")
@@ -115,7 +115,7 @@ Conta com **pesquisadores** da <a href = https://www.ufes.br target = _blank> Un
 
 <h3><span style = "font-weight: bold;">Os dados</span></h3>
 
-São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos (o SINASC) a partir do ano de 1996. Atualmente, são disponibilizados dados do SINASC até 2023 **(sendo estes preliminares)**, sendo os dados deste painel atualizados na última sexta feira de cada mês, com a última atualização tendo ocorrido em 26 de abril de 2024. Os dados podem ser acessados em: Herzog, R. S.; Francisco, R. P. V.; Rodrigues, A. S. Indicadores Obstétricos [banco de dados], 2022, Observatório Obstétrico Brasileiro (OOBr). Disponível em DOI: https://doi.org/10.7303/syn35916919.
+São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos (o SINASC) a partir do ano de 1996. Atualmente, são disponibilizados dados do SINASC até 2023 **(sendo estes preliminares)**, sendo os dados deste painel atualizados na última sexta feira de cada mês, com a última atualização tendo ocorrido em 31 de maio de 2024. Os dados podem ser acessados em: Herzog, R. S.; Francisco, R. P. V.; Rodrigues, A. S. Indicadores Obstétricos [banco de dados], 2022, Observatório Obstétrico Brasileiro (OOBr). Disponível em DOI: https://doi.org/10.7303/syn35916919.
 
 <h3><span style = "font-weight: bold;">Como citar esse painel</span></h3>
 
