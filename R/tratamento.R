@@ -32,8 +32,8 @@ write_xlsx(dados_nasc, "R/databases/Nascimentos_muni_wide.xlsx")
     mutate(
       premat = soma_var(c("1","2","3","4"), dados1), 
       nao_premat = soma_var(c("5","6"), dados1),
-      faltante_premat = soma_var(c("9"), dados1),
-      total_nascidos = soma_var(c("1","2","3","4","5","6","9"), dados1),
+      faltante_premat = soma_var(c("8", "9"), dados1),
+      total_nascidos = soma_var(c("1","2","3","4","5","6", "8", "9"), dados1),
       porc_premat = (premat/(total_nascidos-faltante_premat))*100) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
@@ -66,7 +66,7 @@ write_xlsx(dados2, "R/databases/cesarea_muni_wide.xlsx")
 
 (dados2 <- dados1 %>%
     mutate(
-      apgar1_menor_7 = soma_var(c("00", "01", "02", "03", "04", "05", "06", "0", "1", "2", "4", "5", "6"),dados1),
+      apgar1_menor_7 = soma_var(c("00", "01", "02", "03", "04", "05", "06", "0", "1", "2", "3", "4", "5", "6"),dados1),
       apgar1_maior_7 = soma_var(c("07", "08", "09", "7", "8", "9", "10"), dados1),
       faltantes_apgar1 = soma_var(c("99", "<NA>", "-", "--", "-0", ".", "..", "+", "0Q", "30", "52", "61", "89", "\0209", "è"), dados1),
       porc_apgar1_menor_7 = (apgar1_menor_7 / (apgar1_menor_7 + apgar1_maior_7))*100) %>%
@@ -84,9 +84,9 @@ write_xlsx(dados2, "R/databases/apgar1_muni_wide.xlsx")
 
 (dados2 <- dados1 %>% 
     mutate(
-      apgar5_menor_7 = soma_var(c("00","01","02","03","04","05","06", "0", "2", "3", "4", "5", "6"),dados1), 
+      apgar5_menor_7 = soma_var(c("00","01","02","03","04","05","06", "0", "1", "2", "3", "4", "5", "6"),dados1), 
       apgar5_maior_7 = soma_var(c("07","08","09","10", "7", "8", "9"),dados1),
-      faltantes_apgar5 = soma_var(c("99", "<NA>", "\027", "-", "--", ".", "..", "+", "0-", "0+", "11", "\u0081z", "0R"), dados1),
+      faltantes_apgar5 = soma_var(c("99", "<NA>", "\027", "-", "--", ".", "..", "+", "0-", "0+", "11", "\u0081z", "0R", "39", "41"), dados1),
       porc_apgar5_menor_7 = (apgar5_menor_7/(apgar5_menor_7+apgar5_maior_7))*100) %>% 
     select(-"<NA>", -"\u0081z", -"0R") %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")]) 
@@ -104,8 +104,8 @@ write_xlsx(dados2, "R/databases/apgar5_muni_wide.xlsx")
     mutate(
       anomalia = soma_var(c("1"),dados1), 
       nao_anomalia = soma_var(c("2"),dados1),
-      faltante_anomalia = soma_var(c("9", "<NA>"),dados1),
-      total_nascidos = soma_var(c("1", "2", "9", "<NA>"),dados1),
+      faltante_anomalia = soma_var(c("5", "8", "9", "<NA>"),dados1),
+      total_nascidos = soma_var(c("1", "2", "5", "8", "9", "<NA>"),dados1),
       porc_anomalia = (anomalia/(total_nascidos-faltante_anomalia))*100) %>%
     select(-"<NA>") %>%   
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
@@ -144,8 +144,8 @@ write_xlsx(dados2, "R/databases/peso_menor_2500_muni_wide.xlsx")
     mutate(
       fem = soma_var(c("2"),dados1), 
       masc = soma_var(c("1"),dados1),
-      faltante_sexo = soma_var(c("0"),dados1),
-      total_nascidos = soma_var(c("1", "2", "0"),dados1),
+      faltante_sexo = soma_var(c("0", "9", "<NA>"),dados1),
+      total_nascidos = soma_var(c("1", "2", "0", "9", "<NA>"),dados1),
       porc_fem = (fem/(total_nascidos-faltante_sexo))*100) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
@@ -163,7 +163,7 @@ write_xlsx(dados2, "R/databases/sexo_muni_wide.xlsx")
       nenhuma_consulta = soma_var(c("1"), dados1), # nenhuma consulta
       consulta1 = soma_var(c("2", "3"), dados1), # 1 a 6 consultas
       consulta4 = soma_var(c("4"), dados1), # 7 ou mais 
-      faltante_consulta = soma_var(c("9"), dados1),
+      faltante_consulta = soma_var(c("8", "9"), dados1),
       porc_nenhuma_consulta = nenhuma_consulta/(soma_var(c("1", "2", "3", "4"), dados1)),
       porc_consulta1 = consulta1/(soma_var(c("1", "2", "3", "4"), dados1)),
       porc_consulta4 = consulta4/(soma_var(c("1", "2", "3", "4"), dados1))
@@ -231,8 +231,8 @@ write_xlsx(dados2, "R/databases/raca_mae_muni_wide.xlsx")
     mutate(
       unica = soma_var(c("1"),dados1), 
       multipla = soma_var(c("2", "3"),dados1),
-      faltante_tipo_gravidez = soma_var(c("9"),dados1),
-      total_nascidos = soma_var(c("1","2", "3","9"),dados1),
+      faltante_tipo_gravidez = soma_var(c("4", "9"),dados1),
+      total_nascidos = soma_var(c("1","2", "3", "4", "9"),dados1),
       porc_multipla = (multipla/(total_nascidos-faltante_tipo_gravidez))*100) %>% 
     .[, str_detect(names(.), pattern = "[A-Z]|[a-z]")])
 
@@ -265,7 +265,7 @@ write_xlsx(dados2, "R/databases/tipo_gravidez_muni_wide.xlsx")
 # Valores: 1- Sim; 2- Não; 3- Não se aplica; 9- Ignorado.
 
 (dados1 <- dados %>% 
-   mutate(parto_induzido = case_when(parto_induzido %in% c(3, 4) ~ "faltante",
+   mutate(parto_induzido = case_when(parto_induzido %in% c(NA, 9) ~ "faltante",
                                      parto_induzido == 1 ~ "sim",
                                      parto_induzido == 2 ~ "não")) %>% 
    group_by(UF, Municipio, Codigo, Ano, Robson, parto_induzido) %>% 
@@ -276,7 +276,7 @@ write_xlsx(dados2, "R/databases/tipo_gravidez_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/robson_muni_wide.xlsx")
 
 ### Concatenando todos os dados
-dados_sinasc2021 <- read_excel("R/databases/Nascimentos_muni_wide.xlsx")
+dados_sinasc_final <- read_excel("R/databases/Nascimentos_muni_wide.xlsx")
 
 arquivos <- dir("R/databases") %>% 
   str_subset("\\.xlsx$") %>% 
@@ -284,20 +284,20 @@ arquivos <- dir("R/databases") %>%
 
 for(arquivo in arquivos){
   dados <- read_excel(paste0("R/databases/", arquivo))
-  dados_sinasc2021 <- full_join(dados_sinasc2021, dados, by = c("UF", "Municipio", "Codigo", "Ano"))
+  dados_sinasc_final <- full_join(dados_sinasc_final, dados, by = c("UF", "Municipio", "Codigo", "Ano"))
   print(paste("Junção", arquivo))
 }
 
-names(dados_sinasc2021)
+names(dados_sinasc_final)
 
-if("Nascidos.x" %in% names(dados_sinasc2021)){
-  if(sum(dados_sinasc2021[["Nascidos.x"]], -dados_sinasc2021[["Nascidos.y"]]) == 0){
-    if("Nascidos" %in% names(dados_sinasc2021)){
-      dados_sinasc2021 <- dados_sinasc2021 %>% 
+if("Nascidos.x" %in% names(dados_sinasc_final)){
+  if(sum(dados_sinasc_final[["Nascidos.x"]], -dados_sinasc_final[["Nascidos.y"]]) == 0){
+    if("Nascidos" %in% names(dados_sinasc_final)){
+      dados_sinasc_final <- dados_sinasc_final %>% 
         .[, !str_detect(names(.), "Nascidos.")]
     }
     else{
-      dados_sinasc2021 <- dados_sinasc2021 %>% 
+      dados_sinasc_final <- dados_sinasc_final %>% 
         rename(Nascidos = Nascidos.x) %>%  
         .[, !str_detect(names(.), "Nascidos.")]
     }
@@ -308,14 +308,14 @@ if("Nascidos.x" %in% names(dados_sinasc2021)){
 }
 
 
-if("total_nascidos.x" %in% names(dados_sinasc2021)){
-  if(sum(dados_sinasc2021[["total_nascidos.x"]], -dados_sinasc2021[["total_nascidos.y"]]) == 0){
-    if("total_nascidos" %in% names(dados_sinasc2021)){
-      dados_sinasc2021 <- dados_sinasc2021 %>% 
+if("total_nascidos.x" %in% names(dados_sinasc_final)){
+  if(sum(dados_sinasc_final[["total_nascidos.x"]], -dados_sinasc_final[["total_nascidos.y"]]) == 0){
+    if("total_nascidos" %in% names(dados_sinasc_final)){
+      dados_sinasc_final <- dados_sinasc_final %>% 
         .[, !str_detect(names(.), "total_nascidos.")]
     }
     else{
-      dados_sinasc2021 <- dados_sinasc2021 %>% 
+      dados_sinasc_final <- dados_sinasc_final %>% 
         rename(total_nascidos = total_nascidos.x) %>%  
         .[, !str_detect(names(.), "total_nascidos.")]
     }
@@ -325,27 +325,27 @@ if("total_nascidos.x" %in% names(dados_sinasc2021)){
   }
 }
 
-dados_sinasc2021 <- dados_sinasc2021 %>%
+dados_sinasc_final <- dados_sinasc_final %>%
   mutate(pais = "Brasil") %>%
   mutate(muni_estado = paste(Municipio, "-", UF)) %>% 
   janitor::clean_names()
 
-names(dados_sinasc2021)              
+names(dados_sinasc_final)              
 
-janitor::get_dupes(dados_sinasc2021, c(uf, municipio, codigo, ano))
+janitor::get_dupes(dados_sinasc_final, c(uf, municipio, codigo, ano))
 
-dados_sinasc2021 <- distinct(dados_sinasc2021, uf, municipio, codigo, ano, .keep_all = TRUE)
+dados_sinasc_final <- distinct(dados_sinasc_final, uf, municipio, codigo, ano, .keep_all = TRUE)
 
-janitor::get_dupes(dados_sinasc2021, c(uf, municipio, codigo, ano))
+janitor::get_dupes(dados_sinasc_final, c(uf, municipio, codigo, ano))
 
-dados_sinasc2021 <- left_join(
-  dados_sinasc2021 |> select(!c(municipio, uf)), 
+dados_sinasc_final <- left_join(
+  dados_sinasc_final |> select(!c(municipio, uf)), 
   tabela_aux_municipios |> select(municipio, codmunres, uf, sigla_uf),
   by = join_by(codigo == codmunres)
   ) |>
   select(ano, codigo, municipio, uf, pais, sigla_uf, 3:62)
 
-crunch::write.csv.gz(dados_sinasc2021, file = "dados_oobr_indicadores_obstetricos_sinasc_1996_2024.csv.gz")
+crunch::write.csv.gz(dados_sinasc_final, file = "dados_oobr_indicadores_obstetricos_sinasc_1996_2024.csv.gz")
 
 # Tratamento base consultas e prematuridade ----
 
@@ -362,7 +362,7 @@ crunch::write.csv.gz(dados_sinasc2021, file = "dados_oobr_indicadores_obstetrico
       nenhuma_consulta = soma_var(c("1"), dados1), # nenhuma consulta
       consulta1 = soma_var(c("2", "3"), dados1), # 1 a 6 consultas
       consulta4 = soma_var(c("4"), dados1), # 7 ou mais 
-      faltante_consulta = soma_var(c("9"), dados1),
+      faltante_consulta = soma_var(c("8", "9"), dados1),
       porc_nenhuma_consulta = nenhuma_consulta/(soma_var(c("1", "2", "3", "4"), dados1)),
       porc_consulta1 = consulta1/(soma_var(c("1", "2", "3", "4"), dados1)),
       porc_consulta4 = consulta4/(soma_var(c("1", "2", "3", "4"), dados1))

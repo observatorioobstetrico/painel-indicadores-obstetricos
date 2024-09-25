@@ -75,8 +75,9 @@ library(glue)
 
 # SINASC --------------------
 # tratamento
-dados_sinasc2023 <- read.csv(gzfile("dados_oobr_indicadores_obstetricos_sinasc_1996_2024.csv.gz")) %>%
-  clean_names()
+dados_sinasc <- read.csv(gzfile("dados_oobr_indicadores_obstetricos_sinasc_1996_2024.csv.gz")) %>%
+  clean_names() |>
+  arrange(ano, codigo)
 
 dados_premat_cons <- read.csv(gzfile("dados_oobr_indicadores_obstetricos_prematuridade_consultas_1996_2024.csv.gz")) %>%
   clean_names()
@@ -232,9 +233,9 @@ observeEvent(input$SelectEstadoMun_sinasc, {
 shiny::sliderInput(
   inputId = "anos_sinasc",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2023$ano),
-  max = max(dados_sinasc2023$ano),
-  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  min = min(dados_sinasc$ano),
+  max = max(dados_sinasc$ano),
+  value = c(min(dados_sinasc$ano), max(dados_sinasc$ano)),
   sep = "",
   step = 1
 )
@@ -253,7 +254,7 @@ Row {data-width=650}
 ```{r table-nasc}
 DT::renderDT({
   if (input$SelectMunEst_sinasc == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(nascidos = sum(nascidos)) %>%
       filter(ano <= input$anos_sinasc[2],
@@ -279,7 +280,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEst_sinasc == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(nascidos = sum(nascidos)) %>%
       ungroup() %>%
@@ -306,7 +307,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMun_sinasc,
         uf == input$SelectEstadoMun_sinasc,
@@ -342,7 +343,7 @@ Row {data-width=650}
 ```{r graph-nasc}
 shiny::renderPlot({
   if (input$SelectMunEst_sinasc == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(nascidos = sum(nascidos)) %>%
       filter(ano <= input$anos_sinasc[2], ano >= input$anos_sinasc[1]) %>%
@@ -361,7 +362,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEst_sinasc == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(uf == input$SelectEst_sinasc,
              ano <= input$anos_sinasc[2],
              ano >= input$anos_sinasc[1]) %>%
@@ -382,7 +383,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMun_sinasc,
         uf == input$SelectEstadoMun_sinasc,
@@ -454,9 +455,9 @@ observeEvent(input$SelectEstadoMunPP, {
 sliderInput(
   inputId = "anosPP",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2023$ano),
-  max = max(dados_sinasc2023$ano),
-  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  min = min(dados_sinasc$ano),
+  max = max(dados_sinasc$ano),
+  value = c(min(dados_sinasc$ano), max(dados_sinasc$ano)),
   sep = "",
   step = 1
 )
@@ -483,7 +484,7 @@ Row {data-width=650}
 ```{r table-pp}
 DT::renderDT({
   if (input$SelectMunEstPP == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -528,7 +529,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstPP == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -574,7 +575,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMunPP,
         uf == input$SelectEstadoMunPP,
@@ -625,7 +626,7 @@ Row {data-width=650}
 ```{r graph-pp}
 shiny::renderPlot({
   if (input$SelectMunEstPP == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -663,7 +664,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEstPP == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -704,7 +705,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMunPP,
         uf == input$SelectEstadoMunPP,
@@ -793,9 +794,9 @@ observeEvent(input$SelectEstadoMunPC, {
 sliderInput(
   inputId = "anosPC",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2023$ano),
-  max = max(dados_sinasc2023$ano),
-  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  min = min(dados_sinasc$ano),
+  max = max(dados_sinasc$ano),
+  value = c(min(dados_sinasc$ano), max(dados_sinasc$ano)),
   sep = "",
   step = 1
 )
@@ -822,7 +823,7 @@ Row {data-width=650}
 ```{r table-pc}
 DT::renderDT({
   if (input$SelectMunEstPC == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -866,7 +867,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstPC == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -912,7 +913,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMunPC,
         uf == input$SelectEstadoMunPC,
@@ -964,7 +965,7 @@ Row {data-width=650}
 ```{r graph-pc}
 shiny::renderPlot({
   if (input$SelectMunEstPC == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1002,7 +1003,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEstPC == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1042,7 +1043,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMunPC,
         uf == input$SelectEstadoMunPC,
@@ -1131,9 +1132,9 @@ observeEvent(input$SelectEstadoMunAN, {
 sliderInput(
   inputId = "anosAN",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2023$ano[!is.na(dados_sinasc2023$porc_anomalia)]),
-  max = max(dados_sinasc2023$ano),
-  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  min = min(dados_sinasc$ano[!is.na(dados_sinasc$porc_anomalia)]),
+  max = max(dados_sinasc$ano),
+  value = c(min(dados_sinasc$ano), max(dados_sinasc$ano)),
   sep = "",
   step = 1
 )
@@ -1160,7 +1161,7 @@ Row {data-width=650}
 ```{r table-anc}
 DT::renderDT({
   if (input$SelectMunEstAN == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1215,7 +1216,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstAN == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1272,7 +1273,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMunAN,
         uf == input$SelectEstadoMunAN,
@@ -1322,7 +1323,7 @@ Row {data-width=650}
 ```{r graph-anc}
 shiny::renderPlot({
   if (input$SelectMunEstAN == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1364,7 +1365,7 @@ shiny::renderPlot({
   }
 
   else if (input$SelectMunEstAN == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1408,7 +1409,7 @@ shiny::renderPlot({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMunAN,
         uf == input$SelectEstadoMunAN,
@@ -1498,9 +1499,9 @@ observeEvent(input$SelectEstadoMunCPN, {
 sliderInput(
   inputId = "anosCPN",
   label = HTML("<span class = 'negrito'>Selecione o intervalo de anos:</span>"),
-  min = min(dados_sinasc2023$ano),
-  max = max(dados_sinasc2023$ano),
-  value = c(min(dados_sinasc2023$ano), max(dados_sinasc2023$ano)),
+  min = min(dados_sinasc$ano),
+  max = max(dados_sinasc$ano),
+  value = c(min(dados_sinasc$ano), max(dados_sinasc$ano)),
   sep = "",
   step = 1
 )
@@ -1527,7 +1528,7 @@ Row {data-width=650}
 ```{r table-cpn}
 DT::renderDT({
   if (input$SelectMunEstCPN == 'Nacional') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(pais, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1593,7 +1594,7 @@ DT::renderDT({
   }
 
   else if (input$SelectMunEstCPN == 'Estadual') {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       group_by(uf, ano) %>%
       summarise(
         nascidos = sum(nascidos),
@@ -1661,7 +1662,7 @@ DT::renderDT({
   }
 
   else {
-    dados_sinasc2023 %>%
+    dados_sinasc %>%
       filter(
         municipio == input$SelectMunCPN,
         uf == input$SelectEstadoMunCPN,
