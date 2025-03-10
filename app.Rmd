@@ -101,16 +101,7 @@ dados_robson_cesarea[["grupo_robson_aux"]] <-
   factor(dados_robson_cesarea[["grupo_robson_aux"]], niveis)
 
 # Obtendo o dia, mês e ano por extenso
-df_meses <- data.frame(
-  num_mes = 1:12,
-  nome_mes = c("janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
-               "agosto", "setembro", "outubro", "novembro", "dezembro")
-)
-
-data <- Sys.Date()
-data_por_extenso <- glue(
-  "{substr(data, 9, 10)} de {df_meses$nome_mes[which(df_meses$num_mes == as.numeric(substr(data, start = 6, stop = 7)))]} de {substr(data, 1, 4)}"
-)
+data_por_extenso <- readRDS("R/data_por_extenso.RDS")
 ```
 
 Sobre
@@ -118,7 +109,7 @@ Sobre
 
 <h3><span style = "font-weight: bold;">O OOBr Indicadores Obstétricos</span></h3>
 
-É um painel de visualização dinâmico com análises sob a perspectiva de algumas variáveis da base de dados do Sistema de Informações de Nascidos Vivos (SINASC). As informações consideradas são referentes aos registros de nascidos vivos dos anos de 1996 a 2024 **(sendo os dados de 2023 e 2024 preliminares)**.
+É um painel de visualização dinâmico com análises sob a perspectiva de algumas variáveis da base de dados do Sistema de Informações de Nascidos Vivos (SINASC). As informações consideradas são referentes aos registros de nascidos vivos dos anos de 1996 a 2024 **(sendo os dados 2024 preliminares)**.
 
 <h3><span style = "font-weight: bold;">O Observatório Obstétrico Brasileiro (OOBr)</span></h3>
 
@@ -128,7 +119,7 @@ Conta com **pesquisadores** da <a href = https://www.ufes.br target = _blank> Un
 
 <h3><span style = "font-weight: bold;">Os dados</span></h3>
 
-São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos (o SINASC) a partir do ano de 1996. Atualmente, são disponibilizados dados do SINASC até 2024 **(sendo estes e os de 2023 preliminares)**, sendo os dados deste painel atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em `r data_por_extenso`. Os dados podem ser acessados em: Herzog, R. S.; Francisco, R. P. V.; Rodrigues, A. S. Indicadores Obstétricos [banco de dados], 2022, Observatório Obstétrico Brasileiro (OOBr). Disponível em DOI: https://doi.org/10.7303/syn35916919.
+São providos do DATASUS do Ministério da Saúde e formam um grande banco anual composto por todos os registros das declarações de nascidos vivos (o SINASC) a partir do ano de 1996. Atualmente, são disponibilizados dados do SINASC até 2024 **(sendo estes preliminares)**, sendo os dados deste painel atualizados na última sexta feira de cada mês, tendo a última atualização ocorrido em `r data_por_extenso`. Os dados podem ser acessados em: Herzog, R. S.; Francisco, R. P. V.; Rodrigues, A. S. Indicadores Obstétricos [banco de dados], 2022, Observatório Obstétrico Brasileiro (OOBr). Disponível em DOI: https://doi.org/10.7303/syn35916919.
 
 <h3><span style = "font-weight: bold;">Como citar esse painel</span></h3>
 
@@ -190,7 +181,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-nasc}
 hr(); strong("Nascimentos"); hr()
-p(em(HTML(paste("Obs.: os dados de 2023 e 2024 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2024 são preliminares."))))
 selectInput(
   inputId = "SelectMunEst_sinasc",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -412,7 +403,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-pp}
 hr(); strong("Partos Prematuros"); hr()
-p(em(HTML(paste("Obs.: os dados de 2023 e 2024 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2024 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPP",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -750,7 +741,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-pc}
 hr(); strong("Partos Cesáreas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2023 e 2024 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2024 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstPC",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -1089,7 +1080,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-anc}
 hr(); strong("Anomalias Congênitas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2023 e 2024 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2024 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstAN",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -1455,7 +1446,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-cpn}
 hr(); strong("Consultas de Pré-natal"); hr()
-p(em(HTML(paste("Obs.: os dados de 2023 e 2024 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2024 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCPN",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -2069,7 +2060,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-cr}
 hr(); strong("Classificação de Robson"); hr()
-p(em(HTML(paste("Obs.: os dados de 2023 e 2024 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2024 são preliminares."))))
 selectInput(
   inputId = "SelectMunEstCRob",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),
@@ -2367,7 +2358,7 @@ Inputs {.sidebar data-width=350 style="width: 350px; visibility: visible; top: 7
 ---------------------------------------------
 ```{r input-rc}
 hr(); strong("Robson e Cesáreas"); hr()
-p(em(HTML(paste("Obs.: os dados de 2023 e 2024 são preliminares."))))
+p(em(HTML(paste("Obs.: os dados de 2024 são preliminares."))))
 shiny::selectInput(
   inputId = "SelectMunEstRC",
   label = HTML("<span class = 'negrito'>Selecione o nível de análise:</span>"),

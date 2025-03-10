@@ -26,8 +26,8 @@ variaveis_sinasc <- c(
 
 
 # Baixando os dados preliminares de 2023 e 2024 do SINASC ------------------
-download.file("https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SINASC/DNOPEN23.csv", "R/databases/DNOPEN23.csv", mode = "wb")
-download.file("https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SINASC/DNOPEN24.csv", "R/databases/DNOPEN24.csv", mode = "wb")
+download.file("https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SINASC/csv/SINASC_2023.csv", "R/databases/DNOPEN23.csv", mode = "wb")
+download.file("https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/SINASC/csv/SINASC_2024.csv", "R/databases/DNOPEN24.csv", mode = "wb")
 
 ## Lendo os dados preliminares e excluindo os arquivos baixados
 dados_preliminares_2023_aux1 <- read.csv2("R/databases/DNOPEN23.csv")

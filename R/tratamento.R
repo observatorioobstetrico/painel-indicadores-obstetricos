@@ -4,6 +4,22 @@ library(readxl)
 library(lubridate)
 library(crunch)
 library(janitor)
+library(glue)
+
+# Criando um objeto com a data de atualização por extenso
+## Obtendo o dia, mês e ano por extenso
+df_meses <- data.frame(
+  num_mes = 1:12,
+  nome_mes = c("janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
+               "agosto", "setembro", "outubro", "novembro", "dezembro")
+)
+
+data <- Sys.Date()
+data_por_extenso <- glue(
+  "{substr(data, 9, 10)} de {df_meses$nome_mes[which(df_meses$num_mes == as.numeric(substr(data, start = 6, stop = 7)))]} de {substr(data, 1, 4)}"
+)
+
+saveRDS(data_por_extenso, "R/data_por_extenso.RDS")
 
 # Criando função soma_var para poder fazer tratamento dos dados ----
 soma_var <- function(vars,dados) {
