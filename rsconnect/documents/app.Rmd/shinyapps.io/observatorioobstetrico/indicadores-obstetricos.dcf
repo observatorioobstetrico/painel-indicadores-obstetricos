@@ -5,9 +5,7 @@ account: observatorioobstetrico
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5319247
-bundleId: 9916400
+bundleId: 10179140
 url: https://observatorioobstetrico.shinyapps.io/indicadores-obstetricos/
-when: 1741568131.19791
-lastSyncTime: 1741568131.19792
 asMultiple: FALSE
 asStatic: FALSE
