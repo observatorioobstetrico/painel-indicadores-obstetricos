@@ -27,18 +27,18 @@ soma_var <- function(vars,dados) {
   return(out)
 }
 
-# Tratamento dos dados até o ano de 2024 ----
+# Tratamento dos dados até o ano de 2025 ----
 
 tabela_aux_municipios <- data.table::fread("tabela_auxiliar_municipios.csv") 
 
 ## Nascimentos ----
-(dados_nasc <- read_delim("R/databases/Nascimentos_muni2024.csv", ";", 
+(dados_nasc <- read_delim("R/databases/Nascimentos_muni2025.csv", ";", 
                           escape_double = FALSE, trim_ws = TRUE))
 
 write_xlsx(dados_nasc, "R/databases/Nascimentos_muni_wide.xlsx")
 
 ## Prematuridade ----
-(dados <- read_delim("R/databases/Prematuridade_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Prematuridade_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -56,7 +56,7 @@ write_xlsx(dados_nasc, "R/databases/Nascimentos_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/prematuridade_muni_wide.xlsx")
 
 ## Tipo de parto ----
-(dados <- read_delim("R/databases/Tipo_parto_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Tipo_parto_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -74,7 +74,7 @@ write_xlsx(dados2, "R/databases/prematuridade_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/cesarea_muni_wide.xlsx")
 
 ## Apgar1 ----
-(dados <- read_delim("R/databases/Apgar1_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Apgar1_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -92,7 +92,7 @@ write_xlsx(dados2, "R/databases/cesarea_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/apgar1_muni_wide.xlsx")
 
 ## Apgar5 ----
-(dados <- read_delim("R/databases/Apgar5_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Apgar5_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -110,7 +110,7 @@ write_xlsx(dados2, "R/databases/apgar1_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/apgar5_muni_wide.xlsx")
 
 ## Anomalias ----
-(dados <- read_delim("R/databases/Anomalias_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Anomalias_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -133,7 +133,7 @@ write_xlsx(dados2, "R/databases/apgar5_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/anomalia_muni_wide.xlsx")
 
 ## Peso menor 2500 ----
-(dados <- read_delim("R/databases/Peso_menor_2500_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Peso_menor_2500_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados <- dados %>% 
@@ -150,7 +150,7 @@ write_xlsx(dados2, "R/databases/anomalia_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/peso_menor_2500_muni_wide.xlsx")
 
 ## Sexo ----
-(dados <- read_delim("R/databases/Sexo_fetal_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Sexo_fetal_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -168,7 +168,7 @@ write_xlsx(dados2, "R/databases/peso_menor_2500_muni_wide.xlsx")
 write_xlsx(dados2, "R/databases/sexo_muni_wide.xlsx")
 
 ## Consultas ----
-(dados <- read_delim("R/databases/Consultas_PreNatal_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Consultas_PreNatal_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -198,7 +198,7 @@ write_xlsx(dados2, "R/databases/consultas_muni_wide.xlsx")
 
 #---------------------------------------#
 
-(dados <- read_delim("R/databases/Raca_mae_muni2024.csv",
+(dados <- read_delim("R/databases/Raca_mae_muni2025.csv",
                      ";",
                      escape_double = FALSE,
                      trim_ws = TRUE))
@@ -237,7 +237,7 @@ write_xlsx(dados2, "R/databases/raca_mae_muni_wide.xlsx")
 # Tipo de gravidez, conforme a tabela:9: Ignorado 1: Única2: Dupla3: Tripla e mais
 #---------------------------------------#
 
-(dados <- read_delim("R/databases/Tipo_gravidez_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Tipo_gravidez_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -256,10 +256,10 @@ write_xlsx(dados2, "R/databases/tipo_gravidez_muni_wide.xlsx")
 
 ## Robson ----
 
-(dados <- read_delim("R/databases/Robson_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Robson_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
-(dados_induzido <- read_delim("R/databases/Parto_induzido_muni2024.csv", ";",
+(dados_induzido <- read_delim("R/databases/Parto_induzido_muni2025.csv", ";",
                               escape_double = FALSE, trim_ws = TRUE) %>% 
     rename(nascidos_parto_induzido = Nascidos))
 
@@ -361,13 +361,13 @@ dados_sinasc_final <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, pais, sigla_uf, 3:62)
 
-crunch::write.csv.gz(dados_sinasc_final, file = "dados_oobr_indicadores_obstetricos_sinasc_1996_2024.csv.gz")
+crunch::write.csv.gz(dados_sinasc_final, file = "dados_oobr_indicadores_obstetricos_sinasc_1996_2025.csv.gz")
 
 # Tratamento base consultas e prematuridade ----
 
 ## Consultas ----
 
-(dados <- read_delim("R/databases/Consultas_PreNatal_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Consultas_PreNatal_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -387,7 +387,7 @@ crunch::write.csv.gz(dados_sinasc_final, file = "dados_oobr_indicadores_obstetri
 
 ## Prematuridade consultas ----
 
-(dados <- read_delim("R/databases/Prematuridade_consultas_muni2024.csv", ";", 
+(dados <- read_delim("R/databases/Prematuridade_consultas_muni2025.csv", ";", 
                      escape_double = FALSE, trim_ws = TRUE))
 
 (dados1 <- dados %>%
@@ -432,11 +432,11 @@ dados_final <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, pais, sigla_uf, 3:15)
 
-crunch::write.csv.gz(dados_final, "dados_oobr_indicadores_obstetricos_prematuridade_consultas_1996_2024.csv.gz")
+crunch::write.csv.gz(dados_final, "dados_oobr_indicadores_obstetricos_prematuridade_consultas_1996_2025.csv.gz")
 
 ## Outros arquivos que serão tratadas para serem utilizadas no app de maneira mais leve ----
 
-dados_robson <- read_delim("R/databases/Robson_muni2024.csv", ";", 
+dados_robson <- read_delim("R/databases/Robson_muni2025.csv", ";", 
                            escape_double = FALSE, trim_ws = TRUE)
 
 dados_robson <- dados_robson %>%
@@ -462,9 +462,9 @@ dados_robson <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, sigla_uf, 3:5)
 
-crunch::write.csv.gz(dados_robson, file = "dados_oobr_indicadores_obstetricos_robson_1996_2024.csv.gz")
+crunch::write.csv.gz(dados_robson, file = "dados_oobr_indicadores_obstetricos_robson_1996_2025.csv.gz")
 
-dados_robson_cesarea <- read_delim("R/databases/Robson_cesar_muni2024.csv", ";", 
+dados_robson_cesarea <- read_delim("R/databases/Robson_cesar_muni2025.csv", ";", 
                                    escape_double = FALSE, trim_ws = TRUE) %>% 
   clean_names()
 
@@ -497,6 +497,6 @@ dados_robson_cesarea <- left_join(
   ) |>
   select(ano, codigo, municipio, uf, pais, sigla_uf, 3:6)
 
-crunch::write.csv.gz(dados_robson_cesarea, file = "dados_oobr_indicadores_obstetricos_robson_cesareas_1996_2024.csv.gz")
+crunch::write.csv.gz(dados_robson_cesarea, file = "dados_oobr_indicadores_obstetricos_robson_cesareas_1996_2025.csv.gz")
 
 
